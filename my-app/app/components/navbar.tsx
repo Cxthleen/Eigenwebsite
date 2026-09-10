@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react'
 
 export default function Navbar() {
@@ -13,7 +14,7 @@ export default function Navbar() {
     <nav className="max-w-3xl mx-auto px-6 py-6 relative">
       <div className="flex items-center justify-between">
         <span className="heading-font font-bold text-lg text-[#4a3b52]">
-          ✨ Your Name
+          ✨ Cathleen van Duuren
         </span>
 
         <div className="hidden sm:flex gap-5 text-sm font-semibold text-[#8a6d9c]">
