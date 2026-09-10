@@ -15,7 +15,7 @@ export default function Hero() {
       </h1>
       <p className="mt-4 text-base text-[#6b5877] leading-relaxed max-w-xl mx-auto">
         I'm a student learning to build websites and applications. I love to create things that are both functional and visually appealing.
-        This site is one of the first things I've made with Next.js and Tailwind CSS 💕
+        This site is one of the first things I've made with HTML and Tailwind CSS 💕
       </p>
 
       <div className="mt-6 flex justify-center gap-3">
