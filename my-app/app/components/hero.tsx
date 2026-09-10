@@ -2,7 +2,7 @@ export default function Hero() {
   return (
     <header id="about" className="max-w-3xl mx-auto px-6 py-14 text-center">
       <div className="relative w-28 h-28 mx-auto mb-6">
-        <div className="absolute inset-0 bg-blossom rounded-[45%_55%_60%_40%/50%_45%_55%_50%] rotate-6"></div>
+        <div className="absolute inset-0 bg-blossom rounded-[45%_55%_60%_40%/50%_45%_55%_50%] rotate-6 animate-float"></div>
         <img
           src="/avatar.jpeg"
           alt="Your photo"

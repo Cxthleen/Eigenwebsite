@@ -23,6 +23,62 @@
   --color-butter-tag-text: #a68a2e;
 
   --color-footer-muted: #c9a8bb;
+
+  --animate-float: float 2.5s linear infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(6px, 0px) rotate(6deg);
+  }
+
+  8.33% {
+    transform: translate(5.2px, -3px) rotate(6deg);
+  }
+
+  16.67% {
+    transform: translate(3px, -5.2px) rotate(6deg);
+  }
+
+  25% {
+    transform: translate(0px, -6px) rotate(6deg);
+  }
+
+  33.33% {
+    transform: translate(-3px, -5.2px) rotate(6deg);
+  }
+
+  41.67% {
+    transform: translate(-5.2px, -3px) rotate(6deg);
+  }
+
+  50% {
+    transform: translate(-6px, 0px) rotate(6deg);
+  }
+
+  58.33% {
+    transform: translate(-5.2px, 3px) rotate(6deg);
+  }
+
+  66.67% {
+    transform: translate(-3px, 5.2px) rotate(6deg);
+  }
+
+  75% {
+    transform: translate(0px, 6px) rotate(6deg);
+  }
+
+  83.33% {
+    transform: translate(3px, 5.2px) rotate(6deg);
+  }
+
+  91.67% {
+    transform: translate(5.2px, 3px) rotate(6deg);
+  }
+
+  100% {
+    transform: translate(6px, 0px) rotate(6deg);
+  }
 }
 
 :root {
