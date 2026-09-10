@@ -1,14 +1,14 @@
 const skills = [
-  { name: 'HTML', bg: 'bg-[#fce4ec]', text: 'text-[#a2678a]' },
-  { name: 'CSS / Tailwind', bg: 'bg-[#e6dcfb]', text: 'text-[#7a63a8]' },
-  { name: 'JavaScript', bg: 'bg-[#dcf7ea]', text: 'text-[#4a9c78]' },
-  { name: 'React', bg: 'bg-[#fff2cc]', text: 'text-[#a68a2e]' },
+  { name: 'HTML', bg: 'bg-pink-tag', text: 'text-pink-tag-text' },
+  { name: 'CSS / Tailwind', bg: 'bg-lilac-tag', text: 'text-lilac-tag-text' },
+  { name: 'JavaScript', bg: 'bg-mint-tag', text: 'text-mint-tag-text' },
+  { name: 'React', bg: 'bg-butter-tag', text: 'text-butter-tag-text' },
 ]
 
 export default function Skills() {
   return (
     <section className="max-w-3xl mx-auto px-6 py-10">
-      <h2 className="heading-font text-xl font-bold text-[#4a3b52] mb-4">
+      <h2 className="heading-font text-xl font-bold text-plum mb-4">
         What I can do ✨
       </h2>
       <div className="flex flex-wrap gap-2">
