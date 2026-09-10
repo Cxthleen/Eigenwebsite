@@ -143,7 +143,7 @@ export default function Blog() {
 
         <button
           type="submit"
-          className="self-start px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover transition"
+          className="self-start px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover animate-glow transition"
         >
           Add entry 🌙
         </button>

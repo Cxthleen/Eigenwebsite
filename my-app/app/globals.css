@@ -28,6 +28,7 @@
   --animate-glow: glow 2s ease-in-out infinite;
   --animate-card-in: card-in 0.4s ease-out;
   --animate-pop: pop 0.4s ease-out;
+  --animate-marquee: marquee 20s linear infinite;
 }
 
 @keyframes float {
@@ -119,6 +120,16 @@
 
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }
 
