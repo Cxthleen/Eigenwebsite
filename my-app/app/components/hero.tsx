@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="mt-6 flex justify-center gap-3">
         
         <a href="#projects"
-          className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover transition"
+          className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover animate-glow transition"
         >
           See my projects
         </a>

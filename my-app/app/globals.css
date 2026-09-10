@@ -25,6 +25,9 @@
   --color-footer-muted: #c9a8bb;
 
   --animate-float: float 2.5s linear infinite;
+  --animate-glow: glow 2s ease-in-out infinite;
+  --animate-card-in: card-in 0.4s ease-out;
+  --animate-pop: pop 0.4s ease-out;
 }
 
 @keyframes float {
@@ -78,6 +81,44 @@
 
   100% {
     transform: translate(6px, 0px) rotate(6deg);
+  }
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0px 0px rgba(255, 158, 181, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 16px 4px rgba(255, 158, 181, 0.5);
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 
