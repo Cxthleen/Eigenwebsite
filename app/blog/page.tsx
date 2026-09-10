@@ -88,10 +88,8 @@ export default function Blog() {
           <p className="text-xs font-semibold text-lavender uppercase tracking-wide">
             Total logged
           </p>
-          <p className="heading-font text-xl font-bold text-plum">
-            <p key={totalHours} className="heading-font text-xl font-bold text-plum animate-pop">
-                {totalHours} hours
-            </p>
+          <p key={totalHours} className="heading-font text-xl font-bold text-plum animate-pop">
+            {totalHours} hours
           </p>
         </div>
       </div>
