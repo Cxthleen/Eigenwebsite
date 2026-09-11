@@ -1,3 +1,16 @@
+type ContactLink = {
+  label: string
+  href: string
+  bg: string
+  text: string
+  external: boolean
+}
+
+const contactLinks: ContactLink[] = [
+  { label: 'Email', href: '/contact', bg: 'bg-pink-tag', text: 'text-pink-tag-text', external: false },
+  { label: 'GitHub', href: 'https://github.com/Cxthleen', bg: 'bg-lilac-tag', text: 'text-lilac-tag-text', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cathleen-van-duuren-8731642bb', bg: 'bg-mint-tag', text: 'text-mint-tag-text', external: true },
+]
 
 export default function Contact() {
   return (
@@ -6,19 +19,21 @@ export default function Contact() {
         <h2 className="heading-font text-xl font-bold text-plum mb-2">
           Get in touch! 💌
         </h2>
-        <p className="text-plum-soft mb-4">
+        <p className="text-plum-soft mb-6">
           Feel free to reach out
         </p>
-        <div className="flex justify-center gap-4 text-sm font-bold">
-          <a href="/contact" className="text-pink underline">
-            Email
-          </a>
-          <a href="https://github.com/Cxthleen" target="_blank" className="text-lilac-tag-text underline">
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/cathleen-van-duuren-8731642bb" target="_blank" className="text-mint-tag-text underline">
-            LinkedIn
-          </a>
+
+        <div className="flex justify-center flex-wrap gap-3">
+          {contactLinks.map((link) => (
+            
+            <a  key={link.label}
+              href={link.href}
+              {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+              className={`inline-flex items-center gap-2 px-4 py-2 ${link.bg} rounded-full text-sm font-bold ${link.text} shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200`}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
       </div>
     </section>

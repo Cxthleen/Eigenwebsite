@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import Navbar from '@/components/navbar'
+import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Portfolio',
+  title: 'Cathleen van Duuren - Portfolio',
   description: 'My personal portfolio site',
 }
 
@@ -20,7 +22,11 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-pink-50 text-plum">{children}</body>
+      <body className="bg-pink-50 text-plum">
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   )
 }

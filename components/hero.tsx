@@ -28,7 +28,7 @@ export default function Hero() {
         See my projects
       </Link>
         
-        <a href="#contact"
+        <a href="/contact"
           className="px-5 py-2 bg-white border-2 border-pink-border rounded-full text-sm font-bold text-lavender hover:bg-pink-light transition"
         >
           Get in touch
