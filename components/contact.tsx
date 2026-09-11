@@ -1,3 +1,4 @@
+
 export default function Contact() {
   return (
     <section id="contact" className="max-w-3xl mx-auto px-6 py-10 mb-10">
@@ -9,13 +10,13 @@ export default function Contact() {
           Feel free to reach out
         </p>
         <div className="flex justify-center gap-4 text-sm font-bold">
-          <a href="mailto:c.vanduuren16@gmail.com" className="text-pink underline">
+          <a href="/contact" className="text-pink underline">
             Email
           </a>
-          <a href="https://github.com/Cxthleen" className="text-lilac-tag-text underline">
+          <a href="https://github.com/Cxthleen" target="_blank" className="text-lilac-tag-text underline">
             GitHub
           </a>
-          <a href="https://www.linkedin.com/in/cathleen-van-duuren-8731642bb" className="text-mint-tag-text underline">
+          <a href="https://www.linkedin.com/in/cathleen-van-duuren-8731642bb" target="_blank" className="text-mint-tag-text underline">
             LinkedIn
           </a>
         </div>

@@ -20,7 +20,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-pink-50 text-[#4a3b52]">{children}</body>
+      <body className="bg-pink-50 text-plum">{children}</body>
     </html>
   )
 }

@@ -6,7 +6,7 @@ export default function Hero() {
       <div className="relative w-28 h-28 mx-auto mb-6">
         <div className="absolute inset-0 bg-blossom rounded-[45%_55%_60%_40%/50%_45%_55%_50%] rotate-6 animate-float"></div>
         <img
-          src="/avatar.jpeg"
+          src="/avatar2.jpeg"
           alt="Your photo"
           className="relative w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
         />
@@ -23,7 +23,7 @@ export default function Hero() {
       <div className="mt-6 flex justify-center gap-3">
         
       <Link href="/projects"
-        className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover transition"
+        className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover animate-glow transition"
       >
         See my projects
       </Link>

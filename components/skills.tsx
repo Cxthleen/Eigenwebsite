@@ -1,8 +1,15 @@
-const skills = [
-  { name: 'HTML', bg: 'bg-pink-tag', text: 'text-pink-tag-text' },
-  { name: 'CSS / Tailwind', bg: 'bg-lilac-tag', text: 'text-lilac-tag-text' },
-  { name: 'JavaScript', bg: 'bg-mint-tag', text: 'text-mint-tag-text' },
-  { name: 'React', bg: 'bg-butter-tag', text: 'text-butter-tag-text' },
+type Skill = {
+  name: string
+  emoji: string
+  bg: string
+  text: string
+}
+
+const skills: Skill[] = [
+  { name: 'HTML', emoji: '📄', bg: 'bg-pink-tag', text: 'text-pink-tag-text' },
+  { name: 'CSS / Tailwind', emoji: '🎨', bg: 'bg-lilac-tag', text: 'text-lilac-tag-text' },
+  { name: 'JavaScript', emoji: '⚡', bg: 'bg-mint-tag', text: 'text-mint-tag-text' },
+  { name: 'React', emoji: '🪻', bg: 'bg-butter-tag', text: 'text-butter-tag-text' },
 ]
 
 export default function Skills() {
@@ -15,8 +22,9 @@ export default function Skills() {
         {skills.map((skill) => (
           <span
             key={skill.name}
-            className={`px-3 py-1 ${skill.bg} rounded-full text-sm font-semibold ${skill.text}`}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 ${skill.bg} rounded-full text-sm font-semibold ${skill.text} shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200`}
           >
+            <span>{skill.emoji}</span>
             {skill.name}
           </span>
         ))}

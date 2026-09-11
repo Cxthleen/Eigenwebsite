@@ -7,8 +7,8 @@ export default function Navbar() {
   const links = [
     { href: '#about', label: 'About', emoji: '🌸' },
     { href: '/blog', label: 'Blog', emoji: '📝' },
-    { href: '#projects', label: 'Projects', emoji: '🌷' },
-    { href: '#contact', label: 'Contact', emoji: '💌' },
+    { href: '/projects', label: 'Projects', emoji: '🌷' },
+    { href: '/contact', label: 'Contact', emoji: '💌' },
   ]
 
   return (
