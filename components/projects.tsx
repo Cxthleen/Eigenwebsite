@@ -1,17 +1,5 @@
-import ProjectCard from './projectCard'
-
-const projects = [
-  {
-    name: 'My website',
-    description: 'Bla bla bla bla',
-    link: '#',
-  },
-  {
-    name: 'Boyfriend website',
-    description: 'Bla bla bla bla',
-    link: '#',
-  },
-]
+import ProjectCard from '@/components/projectCard'
+import { projects } from '@/lib/projects'
 
 export default function Projects() {
   const loopedProjects = [...projects, ...projects]
@@ -33,7 +21,9 @@ export default function Projects() {
 
         <div className="flex gap-5 w-max animate-marquee group-hover:[animation-play-state:paused] py-2">
           {loopedProjects.map((project, index) => (
-            <ProjectCard key={index} {...project} />
+            <div key={index} className="shrink-0 w-64">
+              <ProjectCard {...project} />
+            </div>
           ))}
         </div>
       </div>

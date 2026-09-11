@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <header id="about" className="max-w-3xl mx-auto px-6 py-14 text-center">
@@ -20,11 +22,11 @@ export default function Hero() {
 
       <div className="mt-6 flex justify-center gap-3">
         
-        <a href="#projects"
-          className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover animate-glow transition"
-        >
-          See my projects
-        </a>
+      <Link href="/projects"
+        className="px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover transition"
+      >
+        See my projects
+      </Link>
         
         <a href="#contact"
           className="px-5 py-2 bg-white border-2 border-pink-border rounded-full text-sm font-bold text-lavender hover:bg-pink-light transition"
