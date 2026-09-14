@@ -1,16 +1,15 @@
 type ContactLink = {
   label: string
   href: string
-  emoji: string
   bg: string
   text: string
   external: boolean
 }
 
 const contactLinks: ContactLink[] = [
-  { label: 'Email', href: '/contact', emoji: '📧', bg: 'bg-pink-tag dark:bg-dark-card', text: 'text-pink-tag-text dark:text-dark-text', external: false },
-  { label: 'GitHub', href: 'https://github.com/Cxthleen', emoji: '🐙', bg: 'bg-lilac-tag dark:bg-dark-card', text: 'text-lilac-tag-text dark:text-dark-text', external: true },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cathleen-van-duuren-8731642bb', emoji: '💼', bg: 'bg-mint-tag dark:bg-dark-card', text: 'text-mint-tag-text dark:text-dark-text', external: true },
+  { label: 'Email', href: '/contact', bg: 'bg-pink-tag dark:bg-dark-card', text: 'text-pink-tag-text dark:text-dark-text', external: false },
+  { label: 'GitHub', href: 'https://github.com/Cxthleen', bg: 'bg-lilac-tag dark:bg-dark-card', text: 'text-lilac-tag-text dark:text-dark-text', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cathleen-van-duuren-8731642bb', bg: 'bg-mint-tag dark:bg-dark-card', text: 'text-mint-tag-text dark:text-dark-text', external: true },
 ]
 
 export default function Contact() {
