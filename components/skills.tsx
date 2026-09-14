@@ -6,19 +6,21 @@ type Skill = {
 }
 
 const skills: Skill[] = [
-  { name: 'HTML', emoji: '📄', bg: 'bg-pink-tag', text: 'text-pink-tag-text' },
-  { name: 'CSS / Tailwind', emoji: '🎨', bg: 'bg-lilac-tag', text: 'text-lilac-tag-text' },
-  { name: 'JavaScript', emoji: '⚡', bg: 'bg-mint-tag', text: 'text-mint-tag-text' },
-  { name: 'React', emoji: '🪻', bg: 'bg-butter-tag', text: 'text-butter-tag-text' },
+  { name: 'HTML', emoji: '📄', bg: 'bg-pink-tag dark:bg-dark-card', text: 'text-pink-tag-text dark:text-dark-text' },
+  { name: 'CSS / Tailwind', emoji: '🎨', bg: 'bg-lilac-tag dark:bg-dark-card', text: 'text-lilac-tag-text dark:text-dark-text' },
+  { name: 'JavaScript', emoji: '⚡', bg: 'bg-mint-tag dark:bg-dark-card', text: 'text-mint-tag-text dark:text-dark-text' },
+  { name: 'C#', emoji: '🦋', bg: 'bg-butter-tag dark:bg-dark-card', text: 'text-butter-tag-text dark:text-dark-text' },
+  { name: 'React', emoji: '🪻', bg: 'bg-sky-tag dark:bg-dark-card', text: 'text-sky-tag-text dark:text-dark-text' },
+  
 ]
 
 export default function Skills() {
   return (
     <section className="max-w-3xl mx-auto px-6 py-10">
-      <h2 className="heading-font text-xl font-bold text-plum mb-4">
+      <h2 className="heading-font text-xl font-bold text-plum dark:text-dark-text mb-4">
         What I can do ✨
       </h2>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {skills.map((skill) => (
           <span
             key={skill.name}

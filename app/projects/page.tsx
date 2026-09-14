@@ -10,10 +10,10 @@ export default function Projects() {
       </Link>
 
       <div className="flex items-center gap-3 mt-4 mb-8">
-        <h1 className="heading-font text-3xl font-bold text-plum">
+        <h1 className="heading-font text-3xl font-bold text-plum  dark:text-dark-text">
           My projects 🌷
         </h1>
-        <span className="text-xs font-bold px-2.5 py-1 bg-pink-tag rounded-full text-pink-tag-text">
+        <span className="text-xs font-bold px-2.5 py-1 bg-pink-tag  dark:bg-dark-card rounded-full text-pink-tag-text  dark:text-dark-text">
           {projects.length} {projects.length === 1 ? 'project' : 'projects'}
         </span>
       </div>

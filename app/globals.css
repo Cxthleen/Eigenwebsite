@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-plum: #4a3b52;
@@ -22,7 +23,16 @@
   --color-butter-tag: #fff2cc;
   --color-butter-tag-text: #a68a2e;
 
+  --color-sky-tag: #CCEBFF;
+  --color-sky-tag-text: #728FA1;
+
   --color-footer-muted: #c9a8bb;
+
+  --color-dark-bg: #2a2130;
+  --color-dark-card: #362b3f;
+  --color-dark-border: #4a3b52;
+  --color-dark-text: #f5e9f0;
+  --color-dark-text-soft: #cdb8d4;
 
   --animate-float: float 2.5s linear infinite;
   --animate-glow: glow 2s ease-in-out infinite;

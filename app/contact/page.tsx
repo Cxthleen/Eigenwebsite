@@ -40,28 +40,28 @@ export default function Contact() {
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-14">
-      <Link href="/" className="text-sm text-lavender hover:text-plum">
+      <Link href="/" className="text-sm text-lavender dark:text-dark-text-soft hover:text-plum dark:hover:text-dark-text">
         ← back home
       </Link>
 
-      <h1 className="heading-font text-3xl font-bold text-plum mt-4 mb-2">
+      <h1 className="heading-font text-3xl font-bold text-plum dark:text-dark-text mt-4 mb-2">
         Get in touch! 💌
       </h1>
-      <p className="text-plum-soft mb-8">
-        Feel free to reach out — I'm happy to chat.
+      <p className="text-plum-soft dark:text-dark-text-soft mb-8">
+        Feel free to reach out — I&apos;m happy to chat.
       </p>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border-2 border-pink-border rounded-3xl p-6 shadow-sm flex flex-col gap-4"
+        className="bg-white dark:bg-dark-card border-2 border-pink-border dark:border-dark-border rounded-3xl p-6 shadow-sm flex flex-col gap-4"
       >
         <div>
-          <label className="text-sm font-semibold text-lavender block mb-1">
+          <label className="text-sm font-semibold text-lavender dark:text-dark-text-soft block mb-1">
             Name
           </label>
           <input
             {...register('name', { required: 'Please enter your name' })}
-            className="w-full border-2 border-pink-border rounded-xl px-3 py-2 text-sm"
+            className="w-full border-2 border-pink-border dark:border-dark-border rounded-xl px-3 py-2 text-sm bg-white dark:bg-dark-bg text-plum dark:text-dark-text"
             placeholder="Your name"
           />
           {errors.name && (
@@ -70,7 +70,7 @@ export default function Contact() {
         </div>
 
         <div>
-          <label className="text-sm font-semibold text-lavender block mb-1">
+          <label className="text-sm font-semibold text-lavender dark:text-dark-text-soft block mb-1">
             Email
           </label>
           <input
@@ -81,7 +81,7 @@ export default function Contact() {
                 message: 'Please enter a valid email',
               },
             })}
-            className="w-full border-2 border-pink-border rounded-xl px-3 py-2 text-sm"
+            className="w-full border-2 border-pink-border dark:border-dark-border rounded-xl px-3 py-2 text-sm bg-white dark:bg-dark-bg text-plum dark:text-dark-text"
             placeholder="you@example.com"
           />
           {errors.email && (
@@ -90,13 +90,13 @@ export default function Contact() {
         </div>
 
         <div>
-          <label className="text-sm font-semibold text-lavender block mb-1">
+          <label className="text-sm font-semibold text-lavender dark:text-dark-text-soft block mb-1">
             Message
           </label>
           <textarea
             {...register('message', { required: 'Please write a message' })}
             rows={4}
-            className="w-full border-2 border-pink-border rounded-xl px-3 py-2 text-sm"
+            className="w-full border-2 border-pink-border dark:border-dark-border rounded-xl px-3 py-2 text-sm bg-white dark:bg-dark-bg text-plum dark:text-dark-text"
             placeholder="What's on your mind?"
           />
           {errors.message && (
@@ -107,9 +107,9 @@ export default function Contact() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="self-start px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover transition disabled:opacity-50"
+          className="self-start px-5 py-2 bg-pink text-white rounded-full text-sm font-bold shadow-sm hover:bg-pink-hover animate-glow transition disabled:opacity-50"
         >
-          {isSubmitting ? 'sending...' : 'Send message 🌙'}
+          {isSubmitting ? 'sending...' : 'send message 🌙'}
         </button>
 
         {status === 'success' && (

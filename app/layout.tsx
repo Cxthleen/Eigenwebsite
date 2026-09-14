@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-pink-50 text-plum">
+          <body className="bg-pink-50 dark:bg-dark-bg text-plum dark:text-dark-text transition-colors duration-300">
         <Navbar />
         {children}
         <Footer />
