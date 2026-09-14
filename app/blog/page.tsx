@@ -20,6 +20,9 @@ export default function Blog() {
 
   const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0)
 
+  const GOAL_HOURS = 1196
+  const progressPercent = Math.min((totalHours / GOAL_HOURS) * 100, 100)
+
 
   useEffect(() => {
     fetchEntries()
@@ -93,6 +96,35 @@ export default function Blog() {
           </p>
         </div>
       </div>
+
+      <div className="bg-white dark:bg-dark-card border-2 border-pink-border dark:border-dark-border rounded-2xl px-5 py-4 mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs font-semibold text-lavender dark:text-dark-text-soft uppercase tracking-wide">
+            Progress toward {GOAL_HOURS} hours
+          </p>
+          <p className="text-xs font-bold text-pink-tag-text dark:text-dark-text">
+            {progressPercent.toFixed(1)}%
+          </p>
+        </div>
+
+        <div className="relative w-full h-5 bg-pink-tag dark:bg-dark-bg rounded-full overflow-visible">
+          <div
+            className="h-full bg-gradient-to-r from-pink via-pink-hover to-pink rounded-full transition-all duration-500 ease-out relative"
+            style={{ width: `${progressPercent}%` }}
+          >
+            <span
+              key={totalHours}
+              className="absolute -right-2 -top-2.5 text-lg animate-pop"
+            >
+              💫
+            </span>
+          </div>
+        </div>
+
+  <p className="text-xs text-plum-soft dark:text-dark-text-soft mt-3">
+    {totalHours} / {GOAL_HOURS} hours
+  </p>
+</div>
 
       <form
         onSubmit={handleSubmit}

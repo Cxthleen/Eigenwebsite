@@ -4,8 +4,13 @@ import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
-  title: 'Cathleen van Duuren - Portfolio',
-  description: 'My personal portfolio site',
+  title: 'Cathleen van Duuren — Portfolio',
+  description: 'Student developer building cute things for the web.',
+  openGraph: {
+    title: 'Cathleen van Duuren — Portfolio',
+    description: 'Student developer building cute things for the web.',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
