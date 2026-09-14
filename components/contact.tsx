@@ -31,7 +31,6 @@ export default function Contact() {
               {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
               className={`inline-flex items-center gap-2 px-4 py-2 ${link.bg} rounded-full text-sm font-bold ${link.text} shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200`}
             >
-              <span>{link.emoji}</span>
               {link.label}
             </a>
           ))}
