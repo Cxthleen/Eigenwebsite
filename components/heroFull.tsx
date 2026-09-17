@@ -116,17 +116,7 @@ export default function HeroFull() {
       </div>
 
               {/* Small transition hint */}
-        <div className="mt-10 flex justify-center">
-          <a
-            href="#contact"
-            className="group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-ink-soft transition-colors hover:text-rose-deep dark:text-dark-ink-soft dark:hover:text-dark-ink"
-          >
-            Almost there
-            <span className="transition-transform duration-300 group-hover:translate-y-1">
-              ↓
-            </span>
-          </a>
-        </div>
+
     </header>
   )
 }
