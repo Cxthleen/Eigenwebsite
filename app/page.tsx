@@ -1,18 +1,14 @@
-import Hero from '@/components/hero'
+import HeroMoon from '@/components/heroMoon'
 import Skills from '@/components/skills'
 import Projects from '@/components/projects'
 import Contact from '@/components/contact'
-import Divider from '@/components/divider'
 
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <Divider />
+      <HeroMoon />
       <Skills />
-      <Divider />
       <Projects />
-      <Divider />
       <Contact />
     </main>
   )
