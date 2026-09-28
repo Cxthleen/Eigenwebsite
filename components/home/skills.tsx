@@ -64,7 +64,7 @@ export default function Skills() {
           <div className="mb-12 sm:mb-16">
             <SectionHeading
               badge="MY TOOLKIT"
-              title="My little toolbox"
+              title="Things I can do"
               subtitle="The tools I feel cozy with, plus a few I’m still growing into."
             />
           </div>
