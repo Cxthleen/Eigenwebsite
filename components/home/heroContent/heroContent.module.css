@@ -1,0 +1,281 @@
+/*
+ * Dreamy moonlit styling for the hero text + buttons:
+ * frosted lilac glass, soft glows, little sparkles.
+ */
+
+/*
+ * ------------------------------------------------
+ * BADGE
+ * ------------------------------------------------
+ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(222, 208, 240, 0.35);
+  background: linear-gradient(
+    135deg,
+    rgba(222, 208, 240, 0.18),
+    rgba(255, 220, 235, 0.1)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 20px rgba(180, 150, 230, 0.25);
+  backdrop-filter: blur(12px);
+  color: rgba(255, 248, 240, 0.85);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.badgeMoon {
+  color: #ffe8b8;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(255, 232, 184, 0.9);
+  animation: glow 2.8s ease-in-out infinite;
+}
+
+/*
+ * ------------------------------------------------
+ * TITLE
+ * ------------------------------------------------
+ */
+
+.title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  color: var(--color-star);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-shadow: 0 0 24px rgba(255, 220, 235, 0.35);
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 3.25rem;
+  }
+}
+
+.name {
+  background: linear-gradient(
+    100deg,
+    #fff8f0 0%,
+    #ffd6e6 35%,
+    #e2d0ff 65%,
+    #fff8f0 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+.sparkleLeft,
+.sparkleRight {
+  position: absolute;
+  color: #fff3b0;
+  text-shadow: 0 0 10px rgba(255, 243, 176, 0.9);
+  animation: glow 2.4s ease-in-out infinite;
+}
+
+.sparkleLeft {
+  top: -0.4rem;
+  left: -1.4rem;
+  font-size: 1.1rem;
+}
+
+.sparkleRight {
+  right: -1.3rem;
+  bottom: 0.2rem;
+  font-size: 0.9rem;
+  color: #f8d9ff;
+  animation-delay: 1.2s;
+}
+
+/*
+ * ------------------------------------------------
+ * INTRO TEXT
+ * ------------------------------------------------
+ */
+
+.intro {
+  max-width: 28rem;
+  margin: 0 auto;
+  color: rgba(255, 244, 250, 0.8);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+/*
+ * ------------------------------------------------
+ * INTEREST CHIPS
+ * ------------------------------------------------
+ */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(58, 45, 79, 0.3);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 248, 240, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.chip:hover {
+  transform: translateY(-3px);
+  border-color: rgba(248, 217, 255, 0.6);
+  box-shadow: 0 0 18px rgba(220, 180, 255, 0.4);
+}
+
+/*
+ * ------------------------------------------------
+ * BUTTONS
+ * ------------------------------------------------
+ */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.primary,
+.secondary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  padding: 0.8rem 1.6rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+/* moonlight: cream → peach → pink with a soft halo */
+.primary {
+  background: linear-gradient(135deg, #fffaf3, #ffe3d3 50%, #ffd1e3);
+  color: #3a2d4f;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+    0 0 24px rgba(255, 214, 230, 0.55),
+    0 8px 24px rgba(26, 21, 48, 0.25);
+}
+
+/* shimmer sweep on hover */
+.primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.primary:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+    0 0 36px rgba(255, 214, 230, 0.8),
+    0 12px 28px rgba(26, 21, 48, 0.3);
+}
+
+.primary:hover::after {
+  transform: translateX(120%);
+}
+
+.secondary {
+  border: 1px solid rgba(222, 208, 240, 0.55);
+  background: rgba(58, 45, 79, 0.45);
+  backdrop-filter: blur(12px);
+  color: var(--color-star);
+  box-shadow: 0 0 18px rgba(180, 150, 230, 0.2);
+}
+
+.secondary:hover {
+  transform: translateY(-3px) scale(1.03);
+  background-color: rgba(58, 45, 79, 0.6);
+  box-shadow: 0 0 28px rgba(200, 170, 255, 0.45);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid #f8d9ff;
+  outline-offset: 3px;
+}
+
+/*
+ * ------------------------------------------------
+ * KEYFRAMES
+ * ------------------------------------------------
+ */
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badgeMoon,
+  .name,
+  .sparkleLeft,
+  .sparkleRight {
+    animation: none;
+  }
+
+  .primary::after {
+    display: none;
+  }
+}

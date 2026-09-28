@@ -1,0 +1,168 @@
+/*
+ * Night sky backdrop for the hero: soft nebula glows,
+ * a faint milky way, dot stars and twinkling shaped stars.
+ */
+
+.sky {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/*
+ * ------------------------------------------------
+ * NEBULA + MILKY WAY
+ * ------------------------------------------------
+ */
+
+.nebulaA,
+.nebulaB {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+.nebulaA {
+  top: -10%;
+  left: -10%;
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(
+    circle,
+    rgba(150, 120, 210, 0.35),
+    rgba(150, 120, 210, 0) 70%
+  );
+}
+
+.nebulaB {
+  top: 5%;
+  right: -12%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(230, 150, 190, 0.25),
+    rgba(230, 150, 190, 0) 70%
+  );
+  animation-duration: 30s;
+  animation-direction: alternate-reverse;
+}
+
+.milkyWay {
+  position: absolute;
+  top: -20%;
+  left: 20%;
+  width: 30%;
+  height: 90%;
+  transform: rotate(-35deg);
+  background: linear-gradient(
+    to right,
+    rgba(255, 245, 235, 0),
+    rgba(255, 245, 235, 0.07) 40%,
+    rgba(255, 245, 235, 0.1) 50%,
+    rgba(255, 245, 235, 0.07) 60%,
+    rgba(255, 245, 235, 0)
+  );
+  filter: blur(18px);
+}
+
+@keyframes drift {
+  to {
+    transform: translate(6%, 4%) scale(1.1);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * SHAPED STARS
+ * ------------------------------------------------
+ */
+
+.shaped {
+  position: absolute;
+  fill: var(--color-star);
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 8px rgba(255, 215, 190, 0.6));
+  animation: twinkle var(--dur) ease-in-out var(--delay) infinite;
+}
+
+.spin {
+  animation-name: twinkle-spin;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.7) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
+}
+
+@keyframes twinkle-spin {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.8) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8) rotate(360deg);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * DAY TONE (light mode backdrop)
+ * ------------------------------------------------
+ */
+
+.day .nebulaA {
+  background: radial-gradient(
+    circle,
+    rgba(222, 208, 240, 0.7),
+    rgba(222, 208, 240, 0) 70%
+  );
+}
+
+.day .nebulaB {
+  background: radial-gradient(
+    circle,
+    rgba(255, 209, 227, 0.6),
+    rgba(255, 209, 227, 0) 70%
+  );
+}
+
+.day .milkyWay {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.day .shaped {
+  fill: #d4b8f5;
+  filter: drop-shadow(0 0 4px rgba(201, 168, 240, 0.7))
+    drop-shadow(0 0 10px rgba(255, 209, 227, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebulaA,
+  .nebulaB,
+  .shaped {
+    animation: none;
+  }
+}

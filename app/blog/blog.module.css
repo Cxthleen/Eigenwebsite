@@ -1,0 +1,407 @@
+/*
+ * Internship logbook: moonlit progress trail, frosted
+ * lilac form fields and glowing entry cards.
+ */
+
+/*
+ * ------------------------------------------------
+ * PROGRESS
+ * ------------------------------------------------
+ */
+
+.eyebrow {
+  color: var(--color-lilac-deep);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+:global(.dark) .eyebrow {
+  color: var(--color-dark-ink-soft);
+}
+
+.bigNumber {
+  color: var(--color-ink);
+}
+
+:global(.dark) .bigNumber {
+  color: var(--color-dark-ink);
+}
+
+.percent {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #fffaf3, #ffe3d3 50%, #ffd1e3);
+  box-shadow: 0 0 20px rgba(255, 200, 225, 0.6);
+  color: #3a2d4f;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.track {
+  position: relative;
+  height: 1.25rem;
+  width: 100%;
+  border-radius: 9999px;
+  background: rgba(222, 208, 240, 0.45);
+  box-shadow: inset 0 2px 6px rgba(107, 84, 144, 0.18);
+}
+
+:global(.dark) .track {
+  background: rgba(17, 14, 34, 0.7);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.fill {
+  position: relative;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #e2d0ff, #f8c8dc 55%, #ffd9b8);
+  background-size: 200% 100%;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.6),
+    0 0 16px rgba(248, 200, 220, 0.8);
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: flow 6s linear infinite;
+}
+
+/* a little glowing moon riding the tip of the trail */
+.moonTip {
+  position: absolute;
+  top: 50%;
+  right: -0.9rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #fffdf5, #ffe8b8 70%);
+  box-shadow: 0 0 16px rgba(255, 232, 184, 0.95);
+  font-size: 0.85rem;
+  transform: translateY(-50%);
+  animation: bob 3s ease-in-out infinite;
+}
+
+/* milestone stars along the track */
+.milestone {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  translate: -50% -50%;
+  color: rgba(107, 84, 144, 0.35);
+  font-size: 0.7rem;
+  transition:
+    color 0.4s ease,
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    text-shadow 0.4s ease;
+}
+
+:global(.dark) .milestone {
+  color: rgba(222, 208, 240, 0.3);
+}
+
+.milestoneLit {
+  color: #fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 12px rgba(201, 168, 240, 0.9);
+  transform: scale(1.3);
+}
+
+.milestoneLabels {
+  position: relative;
+  height: 1rem;
+  margin-top: 0.5rem;
+}
+
+.milestoneLabel {
+  position: absolute;
+  translate: -50% 0;
+  color: var(--color-ink-soft);
+  font-size: 0.65rem;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+:global(.dark) .milestoneLabel {
+  color: var(--color-dark-ink-soft);
+}
+
+/*
+ * ------------------------------------------------
+ * FORM
+ * ------------------------------------------------
+ */
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-lilac-deep);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+:global(.dark) .label {
+  color: var(--color-dark-ink-soft);
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(201, 168, 240, 0.55);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 2px rgba(107, 84, 144, 0.06);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  outline: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.input::placeholder {
+  color: rgba(122, 102, 112, 0.55);
+}
+
+.input:hover {
+  border-color: rgba(201, 168, 240, 0.85);
+}
+
+.input:focus {
+  border-color: #c9a8f0;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 0 0 4px rgba(222, 208, 240, 0.55),
+    0 0 22px rgba(201, 168, 240, 0.45);
+}
+
+:global(.dark) .input {
+  border-color: rgba(222, 208, 240, 0.18);
+  background: rgba(28, 23, 53, 0.6);
+  color: var(--color-dark-ink);
+  color-scheme: dark;
+}
+
+:global(.dark) .input::placeholder {
+  color: rgba(188, 176, 218, 0.5);
+}
+
+:global(.dark) .input:focus {
+  border-color: rgba(222, 208, 240, 0.45);
+  background: rgba(40, 32, 70, 0.75);
+  box-shadow:
+    0 0 0 4px rgba(180, 150, 240, 0.15),
+    0 0 22px rgba(180, 150, 240, 0.3);
+}
+
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
+.saved {
+  color: var(--color-lilac-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:global(.dark) .saved {
+  color: #e2d0ff;
+}
+
+/*
+ * ------------------------------------------------
+ * ENTRIES
+ * ------------------------------------------------
+ */
+
+.entry {
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@media (min-width: 640px) {
+  .entry {
+    padding: 1.75rem;
+  }
+}
+
+.entryDate {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+:global(.dark) .entryDate {
+  color: var(--color-dark-ink);
+}
+
+.hoursPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(222, 208, 240, 0.45);
+  color: var(--color-lilac-deep);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+:global(.dark) .hoursPill {
+  background: rgba(222, 208, 240, 0.12);
+  color: var(--color-dark-ink);
+}
+
+.note {
+  white-space: pre-wrap;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.75rem;
+}
+
+:global(.dark) .note {
+  color: var(--color-dark-ink-soft);
+}
+
+.delete {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 9999px;
+  color: rgba(107, 84, 144, 0.6);
+  font-size: 0.85rem;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.delete:hover {
+  background: rgba(255, 217, 227, 0.8);
+  color: var(--color-rose-deep);
+  transform: rotate(90deg);
+}
+
+.delete:focus-visible {
+  outline: 2px solid #c9a8f0;
+  outline-offset: 2px;
+}
+
+.delete:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  transform: none;
+}
+
+:global(.dark) .delete {
+  color: var(--color-dark-ink-soft);
+}
+
+:global(.dark) .delete:hover {
+  background: rgba(222, 208, 240, 0.12);
+  color: #ffd1e3;
+}
+
+/* sparkle that appears in the corner on hover */
+.entrySparkle {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  color: #c9a8f0;
+  opacity: 0;
+  transform: scale(0.4) rotate(-30deg);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.entry:hover .entrySparkle {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+:global(.dark) .entrySparkle {
+  color: #fff3b0;
+}
+
+.pageNum {
+  padding: 0.6rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(222, 208, 240, 0.45);
+  color: var(--color-lilac-deep);
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+:global(.dark) .pageNum {
+  background: rgba(222, 208, 240, 0.12);
+  color: var(--color-dark-ink);
+}
+
+.pageBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  transform: none;
+}
+
+.muted {
+  color: var(--color-ink-soft);
+}
+
+:global(.dark) .muted {
+  color: var(--color-dark-ink-soft);
+}
+
+/*
+ * ------------------------------------------------
+ * KEYFRAMES
+ * ------------------------------------------------
+ */
+
+@keyframes flow {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(-50%) rotate(-8deg);
+  }
+
+  50% {
+    transform: translateY(-62%) rotate(8deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill,
+  .moonTip,
+  .entry,
+  .saved {
+    animation: none;
+  }
+}

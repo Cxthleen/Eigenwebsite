@@ -1,11 +1,13 @@
-import HeroMoon from '@/components/heroMoon'
-import Skills from '@/components/skills'
-import Projects from '@/components/projects'
-import Contact from '@/components/contact'
+import HeroMoon from '@/components/home/heroMoon'
+import Skills from '@/components/home/skills'
+import Projects from '@/components/home/projects'
+import Contact from '@/components/home/contact'
+import SmoothSections from '@/components/home/smoothSections'
 
 export default function Home() {
   return (
-    <main>
+    <main data-snap>
+      <SmoothSections />
       <HeroMoon />
       <Skills />
       <Projects />

@@ -1,0 +1,191 @@
+/*
+ * Skills: each skill is a little star card that tilts,
+ * glows in its own pastel tint and sparkles on hover.
+ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.4rem 0.75rem 1.2rem;
+  border-radius: 1.5rem;
+  cursor: default;
+}
+
+/* odd one out spans full row on the 2-col mobile grid */
+.card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 640px) {
+  .card:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+
+/*
+ * The orb wrapper carries the glow (drop-shadow follows the star's
+ * outline) and the hover sparkles; the inner .star is clipped to shape.
+ */
+.orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.6rem;
+  height: 4.6rem;
+  /*
+   * Same filter shape in every state so light/dark and hover
+   * transitions interpolate cleanly, only the vars change.
+   */
+  --rim: rgba(255, 255, 255, 0.9);
+  --rim-size: 2px;
+  --halo: var(--tint);
+  --halo-size: 12px;
+  filter:
+    drop-shadow(0 0 var(--rim-size) var(--rim))
+    drop-shadow(0 0 var(--halo-size) var(--halo));
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.4s ease;
+}
+
+.star {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 42% 42%,
+    #ffffff,
+    var(--tint) 70%
+  );
+  /* rounded-point star; its centre sits exactly at the box centre */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.0 6.0 63.2 31.8 91.8 36.4 71.4 57.0 75.9 85.6 50.0 72.5 24.1 85.6 28.6 57.0 8.2 36.4 36.8 31.8' fill='black' stroke='black' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.0 6.0 63.2 31.8 91.8 36.4 71.4 57.0 75.9 85.6 50.0 72.5 24.1 85.6 28.6 57.0 8.2 36.4 36.8 31.8' fill='black' stroke='black' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.emoji {
+  position: relative;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+:global(.dark) .orb {
+  --rim: color-mix(in srgb, var(--tint) 55%, transparent);
+  --halo: color-mix(in srgb, var(--tint) 50%, transparent);
+}
+
+:global(.dark) .star {
+  background: radial-gradient(
+    circle at 42% 42%,
+    color-mix(in srgb, var(--tint) 45%, #ffffff),
+    color-mix(in srgb, var(--tint) 80%, #3a2d5f) 75%
+  );
+}
+
+.card:hover .orb {
+  transform: translateY(-4px) scale(1.1) rotate(-8deg);
+  --rim: rgba(255, 255, 255, 0.95);
+  --rim-size: 3px;
+  --halo-size: 20px;
+}
+
+:global(.dark) .card:hover .orb {
+  --rim: color-mix(in srgb, var(--tint) 85%, transparent);
+  --halo: color-mix(in srgb, var(--tint) 80%, transparent);
+}
+
+/* sparkles that pop out around the star on hover */
+.orb::before,
+.orb::after {
+  content: '✦';
+  position: absolute;
+  font-size: 0.75rem;
+  color: #c9a8f0;
+  opacity: 0;
+  transform: scale(0.3);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.orb::before {
+  top: -0.35rem;
+  right: -0.45rem;
+}
+
+.orb::after {
+  content: '✧';
+  bottom: -0.2rem;
+  left: -0.6rem;
+  font-size: 0.65rem;
+  color: #f4a6c6;
+}
+
+:global(.dark) .orb::before,
+:global(.dark) .orb::after {
+  color: var(--tint);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--tint) 80%, transparent);
+}
+
+.card:hover .orb::before {
+  opacity: 1;
+  transform: scale(1) rotate(20deg);
+}
+
+.card:hover .orb::after {
+  opacity: 1;
+  transform: scale(1) rotate(-15deg);
+  transition-delay: 0.08s;
+}
+
+.name {
+  color: var(--color-ink);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+:global(.dark) .name {
+  color: var(--color-dark-ink);
+}
+
+/* pastel "star trail" underline that grows on hover */
+.name::after {
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 0.35rem auto 0;
+  width: 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, var(--tint), transparent);
+  transition: width 0.4s ease;
+}
+
+.card:hover .name::after {
+  width: 80%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .orb {
+    transform: none;
+  }
+}

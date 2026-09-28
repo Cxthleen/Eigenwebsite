@@ -1,0 +1,172 @@
+/*
+ * Intro animation for the hero: a star falls onto the
+ * portrait and bursts into little stars.
+ *
+ * --impact-y is set from JS on the .overlay element.
+ */
+
+.overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+}
+
+/*
+ * ------------------------------------------------
+ * SHOOTING STAR
+ * ------------------------------------------------
+ */
+
+/* The fall itself is animated from JS (see index.tsx). */
+.shootingStar {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+}
+
+.starHead {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #fffaf0;
+  filter: drop-shadow(0 0 4px #fff)
+    drop-shadow(0 0 12px rgba(255, 215, 190, 0.95))
+    drop-shadow(0 0 28px rgba(255, 185, 150, 0.7));
+  animation: spin 0.9s linear infinite;
+}
+
+.starTrail {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 14px;
+  height: 180px;
+  transform: translateX(-50%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 220, 200, 0),
+    rgba(255, 235, 220, 0.45) 55%,
+    rgba(255, 255, 255, 0.95)
+  );
+  filter: blur(2px);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * IMPACT BURST
+ * ------------------------------------------------
+ */
+
+.burst {
+  position: absolute;
+  left: 50%;
+  top: var(--impact-y);
+  width: 0;
+  height: 0;
+}
+
+.burstFlash {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 220px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 225, 205, 0.6) 30%,
+    rgba(255, 200, 170, 0) 70%
+  );
+  transform: translate(-50%, -50%) scale(0);
+  animation: flash 0.7s ease-out forwards;
+}
+
+.burstRing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  border: 2px solid rgba(255, 245, 235, 0.9);
+  box-shadow: 0 0 18px rgba(255, 220, 200, 0.8);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ring 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+.burstStar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+  animation: burst var(--dur) cubic-bezier(0.15, 0.85, 0.3, 1)
+    var(--delay) forwards;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+
+@keyframes ring {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4);
+  }
+}
+
+@keyframes burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--x)),
+        calc(-50% + var(--y))
+      )
+      scale(1) rotate(var(--spin));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    display: none;
+  }
+}

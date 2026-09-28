@@ -1,0 +1,182 @@
+/*
+ * Project card: frosted glass polaroid that tilts toward
+ * the cursor, straightens its photo and sparkles on hover.
+ */
+
+.card {
+  display: block;
+  height: 100%;
+  padding: 0.9rem;
+  border-radius: 1.6rem;
+}
+
+.frame {
+  position: relative;
+  padding: 0.45rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(160deg, #ffffff, #f7eeff);
+  box-shadow:
+    0 0 0 1px rgba(222, 208, 240, 0.8),
+    0 6px 18px rgba(107, 84, 144, 0.12);
+  transform: rotate(-2.5deg);
+  transition:
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+
+:global(.dark) .frame {
+  background: linear-gradient(160deg, #2e2552, #1c1735);
+  box-shadow:
+    0 0 0 1px rgba(222, 208, 240, 0.14),
+    0 6px 18px rgba(5, 3, 15, 0.4);
+}
+
+.card:hover .frame {
+  transform: rotate(0deg) scale(1.03) translateZ(20px);
+  box-shadow:
+    0 0 0 1px rgba(201, 168, 240, 0.9),
+    0 0 26px rgba(222, 208, 240, 0.8),
+    0 10px 24px rgba(107, 84, 144, 0.15);
+}
+
+:global(.dark) .card:hover .frame {
+  box-shadow:
+    0 0 0 1px rgba(222, 208, 240, 0.3),
+    0 0 26px rgba(180, 150, 240, 0.3),
+    0 10px 24px rgba(5, 3, 15, 0.5);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 9rem;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+/* sparkles that pop onto the photo corners */
+.sparkle {
+  position: absolute;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(201, 168, 240, 0.9);
+  opacity: 0;
+  transform: scale(0.3) rotate(-30deg);
+  transition:
+    opacity 0.3s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.sparkle:nth-of-type(1) {
+  top: -0.5rem;
+  right: -0.4rem;
+  font-size: 1.1rem;
+}
+
+.sparkle:nth-of-type(2) {
+  bottom: 0.4rem;
+  left: -0.5rem;
+  font-size: 0.8rem;
+  transition-delay: 0.08s;
+}
+
+:global(.dark) .sparkle {
+  color: #fff3b0;
+  text-shadow: 0 0 8px rgba(255, 243, 176, 0.9);
+}
+
+.card:hover .sparkle {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.body {
+  padding: 1.1rem 0.3rem 0.2rem;
+}
+
+.name {
+  color: var(--color-ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.card:hover .name {
+  color: var(--color-lilac-deep);
+}
+
+:global(.dark) .name {
+  color: var(--color-dark-ink);
+}
+
+:global(.dark) .card:hover .name {
+  color: #e2d0ff;
+}
+
+.description {
+  display: -webkit-box;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+:global(.dark) .description {
+  color: var(--color-dark-ink-soft);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed rgba(201, 168, 240, 0.6);
+}
+
+:global(.dark) .footer {
+  border-top-color: rgba(222, 208, 240, 0.18);
+}
+
+.view {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  background: rgba(222, 208, 240, 0.35);
+  color: var(--color-lilac-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card:hover .view {
+  background: linear-gradient(135deg, #fffaf3, #ffe3d3 50%, #ffd1e3);
+  box-shadow: 0 0 16px rgba(255, 200, 225, 0.7);
+  color: #3a2d4f;
+}
+
+:global(.dark) .view {
+  background: rgba(222, 208, 240, 0.12);
+  color: var(--color-dark-ink);
+}
+
+.arrow {
+  color: var(--color-lilac-deep);
+  font-size: 1.1rem;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card:hover .arrow {
+  transform: translateX(4px) rotate(-10deg);
+}
+
+:global(.dark) .arrow {
+  color: #e2d0ff;
+}

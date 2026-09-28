@@ -1,0 +1,405 @@
+/*
+ * Shared dreamy building blocks: frosted glass, cursor
+ * moonlight, tilt, badges, gradient titles and buttons.
+ * Every block has a light (pastel dawn) and dark (night) look.
+ */
+
+/*
+ * ------------------------------------------------
+ * GLASS PANEL
+ * ------------------------------------------------
+ */
+
+.glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(222, 208, 240, 0.8);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.72),
+    rgba(250, 240, 255, 0.55) 55%,
+    rgba(255, 238, 245, 0.6)
+  );
+  backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 30px rgba(107, 84, 144, 0.1),
+    0 0 40px rgba(222, 208, 240, 0.35);
+}
+
+:global(.dark) .glass {
+  border-color: rgba(222, 208, 240, 0.16);
+  background: linear-gradient(
+    145deg,
+    rgba(40, 32, 70, 0.6),
+    rgba(28, 23, 53, 0.55) 55%,
+    rgba(45, 30, 60, 0.55)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(222, 208, 240, 0.08),
+    0 10px 30px rgba(5, 3, 15, 0.45),
+    0 0 40px rgba(160, 130, 220, 0.12);
+}
+
+/* moonlight spot that follows the cursor */
+.glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle 260px at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.85),
+    rgba(248, 217, 255, 0.35) 40%,
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+
+:global(.dark) .glow::before {
+  background: radial-gradient(
+    circle 260px at var(--mx, 50%) var(--my, 50%),
+    rgba(222, 208, 240, 0.18),
+    rgba(180, 150, 240, 0.08) 40%,
+    transparent 70%
+  );
+}
+
+.glow:hover::before {
+  opacity: 1;
+}
+
+/* gentle 3D tilt toward the cursor */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.tilt:hover {
+  border-color: rgba(201, 168, 240, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(107, 84, 144, 0.16),
+    0 0 50px rgba(222, 208, 240, 0.6);
+}
+
+:global(.dark) .tilt:hover {
+  border-color: rgba(222, 208, 240, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(222, 208, 240, 0.12),
+    0 18px 40px rgba(5, 3, 15, 0.5),
+    0 0 50px rgba(180, 150, 240, 0.25);
+}
+
+/*
+ * ------------------------------------------------
+ * HEADING
+ * ------------------------------------------------
+ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 168, 240, 0.55);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 20px rgba(222, 208, 240, 0.5);
+  color: var(--color-lilac-deep);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+:global(.dark) .badge {
+  border-color: rgba(222, 208, 240, 0.25);
+  background: rgba(40, 32, 70, 0.5);
+  box-shadow: 0 0 20px rgba(180, 150, 230, 0.2);
+  color: var(--color-dark-ink-soft);
+}
+
+.badgeStar {
+  color: #c9a8f0;
+  animation: twinkle 2.6s ease-in-out infinite;
+}
+
+.badgeStar:last-child {
+  animation-delay: 1.3s;
+}
+
+:global(.dark) .badgeStar {
+  color: #fff3b0;
+  text-shadow: 0 0 6px rgba(255, 243, 176, 0.8);
+}
+
+.title {
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  background: linear-gradient(100deg, #3a2d4f, #7a4f9a 45%, #e56b87 80%, #3a2d4f);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 9s linear infinite;
+}
+
+:global(.dark) .title {
+  background-image: linear-gradient(100deg, #fff8f0, #ffd6e6 40%, #e2d0ff 70%, #fff8f0);
+}
+
+.subtitle {
+  color: var(--color-ink-soft);
+}
+
+:global(.dark) .subtitle {
+  color: var(--color-dark-ink-soft);
+}
+
+/*
+ * ------------------------------------------------
+ * BUTTONS
+ * ------------------------------------------------
+ */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  padding: 0.75rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn:focus-visible {
+  outline: 2px solid #c9a8f0;
+  outline-offset: 3px;
+}
+
+/* shimmer sweep */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+.btn:hover::after {
+  transform: translateX(120%);
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #fffaf3, #ffe3d3 50%, #ffd1e3);
+  color: #3a2d4f;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+    0 0 22px rgba(255, 200, 225, 0.6),
+    0 8px 20px rgba(107, 84, 144, 0.15);
+}
+
+.btnPrimary:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+    0 0 34px rgba(255, 200, 225, 0.85),
+    0 12px 26px rgba(107, 84, 144, 0.2);
+}
+
+.btnGhost {
+  border: 1px solid rgba(201, 168, 240, 0.6);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  color: var(--color-lilac-deep);
+  box-shadow: 0 0 18px rgba(222, 208, 240, 0.45);
+}
+
+.btnGhost:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 28px rgba(201, 168, 240, 0.6);
+}
+
+:global(.dark) .btnGhost {
+  border-color: rgba(222, 208, 240, 0.35);
+  background: rgba(58, 45, 90, 0.45);
+  color: var(--color-dark-ink);
+  box-shadow: 0 0 18px rgba(180, 150, 230, 0.2);
+}
+
+:global(.dark) .btnGhost:hover {
+  background-color: rgba(58, 45, 90, 0.7);
+  box-shadow: 0 0 28px rgba(200, 170, 255, 0.4);
+}
+
+/*
+ * ------------------------------------------------
+ * SCROLL HINT
+ * ------------------------------------------------
+ */
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  color: var(--color-ink-soft);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.hint:hover {
+  color: var(--color-lilac-deep);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+:global(.dark) .hint {
+  color: var(--color-dark-ink-soft);
+}
+
+:global(.dark) .hint:hover {
+  color: var(--color-dark-ink);
+  background-color: rgba(222, 208, 240, 0.08);
+}
+
+.hintStar {
+  display: inline-block;
+  color: #c9a8f0;
+  animation: fall 1.8s ease-in-out infinite;
+}
+
+:global(.dark) .hintStar {
+  color: #fff3b0;
+}
+
+/*
+ * ------------------------------------------------
+ * KEYFRAMES
+ * ------------------------------------------------
+ */
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes fall {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt {
+    transform: none;
+  }
+
+  .badgeStar,
+  .title,
+  .hintStar {
+    animation: none;
+  }
+
+  .btn::after {
+    display: none;
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * STAR BADGE
+ * ------------------------------------------------
+ * A glowing rounded-point star behind an emoji or number.
+ * The glow lives on the wrapper (drop-shadow follows the
+ * star outline); the ::before is the masked star itself.
+ * Tune per use with --star-bg / --star-glow. The base rule has
+ * zero specificity so page modules can override position/size.
+ */
+
+:where(.star) {
+  --star-bg: radial-gradient(circle at 42% 40%, #ffffff, #e2cdfa 45%, #c9a8f0 90%);
+  --star-glow: rgba(185, 150, 235, 0.55);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  line-height: 1;
+  /* tight glow so it hugs the star instead of blurring into a round halo */
+  filter:
+    drop-shadow(0 1px 1px rgba(107, 84, 144, 0.25))
+    drop-shadow(0 0 5px var(--star-glow));
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.3s ease;
+}
+
+:where(.star)::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  background: var(--star-bg);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.0 6.0 63.2 31.8 91.8 36.4 71.4 57.0 75.9 85.6 50.0 72.5 24.1 85.6 28.6 57.0 8.2 36.4 36.8 31.8' fill='black' stroke='black' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.0 6.0 63.2 31.8 91.8 36.4 71.4 57.0 75.9 85.6 50.0 72.5 24.1 85.6 28.6 57.0 8.2 36.4 36.8 31.8' fill='black' stroke='black' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+:global(.dark) .star {
+  --star-bg: radial-gradient(circle at 42% 40%, #fbf6ff, #cdb6f2 50%, #9f84d8 95%);
+  --star-glow: rgba(205, 182, 242, 0.5);
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 0 5px var(--star-glow));
+}

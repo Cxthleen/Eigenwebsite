@@ -1,94 +1,66 @@
-
 import Link from 'next/link'
+import FloatingDecor from '@/components/shared/floatingDecor'
+import GlowCard from '@/components/dreamy/glowCard'
+import dreamy from '@/components/dreamy/dreamy.module.css'
 
 export default function NotFound() {
   return (
-    <main className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#fff8f3] via-[#fce8ef] to-[#eee8ff] px-6 py-24 text-center">
-      {/* Soft ambient glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-24 top-10 -z-10 h-80 w-80 rounded-full bg-[#f5b8ce]/40 blur-3xl"
-      />
+    <main className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
+      <FloatingDecor className="left-[12%] top-[20%] text-3xl opacity-70">✦</FloatingDecor>
+      <FloatingDecor className="right-[15%] top-[30%] text-2xl opacity-70" delay="1s">✧</FloatingDecor>
+      <FloatingDecor className="bottom-[22%] left-[20%] text-xl opacity-60" delay="2s">⋆</FloatingDecor>
+      <FloatingDecor className="bottom-[18%] right-[15%] text-2xl opacity-60" delay="1.5s">☾</FloatingDecor>
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-20 bottom-10 -z-10 h-96 w-96 rounded-full bg-[#c8b9f5]/40 blur-3xl"
-      />
-
-      {/* Floating decorations */}
-      <span className="absolute left-[12%] top-[20%] animate-float text-3xl text-[#c58aa8] opacity-70">
-        ✦
-      </span>
-
-      <span className="absolute right-[15%] top-[30%] animate-float text-2xl text-[#a393d1] opacity-70 [animation-delay:1s]">
-        ✧
-      </span>
-
-      <span className="absolute bottom-[22%] left-[20%] animate-float text-xl text-[#c58aa8] opacity-60 [animation-delay:2s]">
-        ⋆
-      </span>
-
-      <span className="absolute bottom-[18%] right-[15%] animate-float text-2xl text-[#a393d1] opacity-60 [animation-delay:1.5s]">
-        ✧
-      </span>
-
-      {/* Main content */}
-      <div className="relative z-10 flex max-w-xl flex-col items-center">
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#e8c5d3] bg-white/70 px-4 py-2 text-xs font-semibold tracking-wide text-[#765568] shadow-sm backdrop-blur-md">
-          <span>🌙</span>
-          A little detour
+      <GlowCard className="relative z-10 flex w-full max-w-xl flex-col items-center rounded-[2rem] px-6 py-10 sm:px-12">
+        <div className={`mb-5 ${dreamy.badge}`}>
+          <span aria-hidden="true">🌙</span>
+          A LITTLE DETOUR
         </div>
 
-        {/* Hello Kitty */}
-        <div className="relative mb-6">
-          <div className="absolute inset-0 scale-75 rounded-full bg-[#f5c6d8]/60 blur-3xl" />
+        {/* Hello Kitty, floating in a moon glow */}
+        <div className="relative mb-4 animate-float">
+          <div className="absolute inset-0 scale-90 rounded-full bg-[radial-gradient(circle,rgba(255,240,220,0.9),rgba(248,217,255,0.5)_45%,transparent_70%)] blur-xl dark:bg-[radial-gradient(circle,rgba(255,232,184,0.35),rgba(180,150,240,0.2)_45%,transparent_70%)]" />
 
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/hellokitty.gif"
+            src="/images/hellokitty.gif"
             alt="Hello Kitty waving"
-            className="relative h-48 w-72 object-contain drop-shadow-xl sm:h-56 sm:w-80"
+            className="relative h-48 w-72 rounded-[1.4rem] object-cover p-1.5 shadow-[0_0_0_1px_rgba(201,168,240,0.7),0_0_30px_rgba(222,208,240,0.9),0_10px_24px_rgba(107,84,144,0.15)] bg-white sm:h-56 sm:w-80 dark:bg-[#2e2552] dark:shadow-[0_0_0_1px_rgba(222,208,240,0.2),0_0_30px_rgba(180,150,240,0.3)]"
           />
         </div>
 
-        {/* 404 */}
-        <p className="heading-font mb-2 bg-gradient-to-r from-[#c56f99] to-[#9276c8] bg-clip-text text-7xl font-bold text-transparent sm:text-8xl">
-          404
+        <p className="heading-font mb-2 text-7xl sm:text-8xl">
+          <span className={dreamy.title}>404</span>
         </p>
 
-        <h1 className="heading-font mb-4 text-2xl font-bold text-[#493744] sm:text-3xl">
+        <h1 className="heading-font mb-4 text-2xl font-bold text-ink sm:text-3xl dark:text-dark-ink">
           This page wandered off
         </h1>
 
-        <p className="mb-8 max-w-sm text-sm leading-relaxed text-[#765f70] sm:text-base">
-          I couldn&apos;t find what you&apos;re looking for — maybe it
-          got lost chasing something shiny.
+        <p className={`mb-8 max-w-sm text-sm leading-relaxed sm:text-base ${dreamy.subtitle}`}>
+          I couldn&apos;t find what you&apos;re looking for. Maybe it
+          got distracted chasing something shiny.
           <br />
           <span className="mt-2 inline-block">
             Let&apos;s find our way back together. ✨
           </span>
         </p>
 
-        {/* Navigation buttons */}
         <div className="flex flex-wrap justify-center gap-3">
-          <Link
-            href="/"
-            className="rounded-2xl bg-gradient-to-r from-[#d58aaa] to-[#b77bbd] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#c58aa8]/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            Take me home <span aria-hidden="true">↗</span>
+          <Link href="/" className={`${dreamy.btn} ${dreamy.btnPrimary}`}>
+            <span aria-hidden="true">✦</span>
+            Take me home
           </Link>
 
-          <Link
-            href="/projects"
-            className="rounded-2xl border border-[#e5c8d7] bg-white/80 px-6 py-3 text-sm font-bold text-[#62475a] shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white"
-          >
+          <Link href="/projects" className={`${dreamy.btn} ${dreamy.btnGhost}`}>
             See my projects
           </Link>
         </div>
 
-        <p className="mt-12 text-xs tracking-wide text-[#987b91]">
+        <p className="mt-10 text-xs tracking-wide text-lilac-deep/70 dark:text-dark-ink-soft/70">
           Lost in space, but not for long ⋆｡°✩
         </p>
-      </div>
+      </GlowCard>
     </main>
   )
 }

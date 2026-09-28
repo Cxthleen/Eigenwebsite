@@ -1,0 +1,29 @@
+/*
+ * Fades + un-blurs hero content in once the
+ * shooting star lands on the portrait.
+ */
+
+.reveal {
+  transition:
+    opacity 0.65s ease,
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.65s ease;
+}
+
+.hidden {
+  opacity: 0 !important;
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.visible {
+  opacity: 1;
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}

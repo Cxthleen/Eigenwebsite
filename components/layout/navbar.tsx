@@ -1,73 +1,73 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import DarkModeToggle from '@/components/darkModeToggle'
+import { usePathname } from 'next/navigation'
+import DarkModeToggle from './darkModeToggle'
+import styles from './navbar.module.css'
+
+const links = [
+  { href: '/about', label: 'About', emoji: '✨' },
+  { href: '/projects', label: 'Projects', emoji: '🌙' },
+  { href: '/blog', label: 'Blog', emoji: '📓' },
+  { href: '/contact', label: 'Contact', emoji: '⭐' },
+]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isOverSky, setIsOverSky] = useState(true)
-
-  const links = [
-    { href: '/about', label: 'About', emoji: '✨' },
-    { href: '/projects', label: 'Projects', emoji: '🌙' },
-    { href: '/blog', label: 'Blog', emoji: '📓' },
-    { href: '/contact', label: 'Contact', emoji: '⭐' },
-  ]
+  const [isNearTop, setIsNearTop] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const pathname = usePathname()
+  // only the home page has the night-sky hero behind the navbar
+  const isOverSky = pathname === '/' && isNearTop
 
   useEffect(() => {
     function handleScroll() {
-      // hero is 130vh tall, fade the navbar's look out over the first ~70% of it
-      setIsOverSky(window.scrollY < window.innerHeight * 0.9)
+      // the hero's night sky fades out as you scroll; switch looks halfway through it
+      setIsNearTop(window.scrollY < window.innerHeight * 0.5)
+      setIsScrolled(window.scrollY > 24)
     }
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const isActive = (href: string) => pathname.startsWith(href)
+
   return (
-        <nav className="absolute top-4 left-0 z-40 w-full px-4">
-          <div
-            className={`soft-card relative mx-auto flex w-full max-w-4xl items-center justify-between rounded-2xl border px-5 py-3 backdrop-blur-xl transition-colors duration-500 ${
-              isOverSky
-                ? 'bg-night-mid/50 border-star/20'
-                : 'bg-white/85 dark:bg-dark-surface/85 border-petal/60 dark:border-dark-line'
-            }`}
-          >
-        <Link
-          href="/"
-          className={`heading-font font-bold text-lg transition-colors duration-500 ${
-            isOverSky ? 'text-star hover:text-moon-glow' : 'text-ink dark:text-dark-ink hover:text-rose-deep dark:hover:text-rose'
-          }`}
-        >
-          {isOverSky ? '🌙' : '✨'} Cathleen
+    <nav className={styles.nav} data-sky={isOverSky} data-scrolled={isScrolled}>
+      <div className={styles.bar}>
+        <span className={styles.twinkle} aria-hidden="true">✦</span>
+        <span className={styles.twinkle} aria-hidden="true">✧</span>
+
+        <Link href="/" className={`heading-font ${styles.logo}`}>
+          <span className={styles.logoMoon} aria-hidden="true">☾</span>
+          <span className={styles.logoText}>Cathleen</span>
         </Link>
 
-        <div className="hidden sm:flex items-center gap-1">
+        <div className={styles.links}>
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-500 ${
-                isOverSky
-                  ? 'text-star/80 hover:bg-star/10 hover:text-star'
-                  : 'text-cocoa dark:text-dark-ink-soft hover:bg-blush dark:hover:bg-dark-raised hover:text-ink dark:hover:text-dark-ink'
-              }`}
+              className={`${styles.link} ${isActive(link.href) ? styles.active : ''}`}
+              aria-current={isActive(link.href) ? 'page' : undefined}
             >
               {link.label}
             </Link>
           ))}
-          <div className={`ml-2 pl-2 border-l transition-colors duration-500 ${isOverSky ? 'border-star/20' : 'border-petal/60 dark:border-dark-line'}`}>
+          <span className={styles.divider} aria-hidden="true" />
+          <div className={styles.orb}>
             <DarkModeToggle />
           </div>
         </div>
 
-        <div className="sm:hidden flex items-center gap-2">
-          <DarkModeToggle />
+        <div className={styles.mobileActions}>
+          <div className={styles.orb}>
+            <DarkModeToggle />
+          </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`soft-pill w-9 h-9 rounded-xl flex items-center justify-center text-base transition-all duration-500 ${
-              isOverSky ? 'bg-star/10 text-star' : 'bg-petal dark:bg-dark-raised text-cocoa dark:text-dark-ink'
-            }`}
+            className={styles.menuButton}
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
@@ -76,13 +76,13 @@ export default function Navbar() {
         </div>
 
         {isOpen && (
-          <div className="soft-card sm:hidden absolute right-4 top-16 bg-white dark:bg-dark-surface border border-petal/60 dark:border-dark-line rounded-2xl flex flex-col gap-0.5 p-2 z-10 min-w-44">
+          <div className={styles.menu}>
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-cocoa dark:text-dark-ink-soft hover:bg-blush dark:hover:bg-dark-raised hover:text-ink dark:hover:text-dark-ink transition-all"
+                className={`${styles.menuLink} ${isActive(link.href) ? styles.active : ''}`}
               >
                 <span>{link.emoji}</span> {link.label}
               </Link>

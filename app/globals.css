@@ -34,6 +34,7 @@ html {
   }
 }
 
+
 .scroll-reveal {
   opacity: 0;
   transform: translateY(45px);
@@ -88,21 +89,21 @@ html {
   --color-lilac: #ded0f0;
   --color-lilac-deep: #6b5490;
 
-  --color-night-top: #2b2438;
-    --color-night-mid: #4a3b52;
+  --color-night-top: #1a1530;
+    --color-night-mid: #3a2d4f;
     --color-night-low: #6b5560;
     --color-horizon: #d9b3a8;
     --color-star: #fff8f0;
     --color-moon-glow: #ffe8d6;
 
 
-  /* dark mode */
-  --color-dark-bg: #221c20;
-  --color-dark-surface: #2e2529;
-  --color-dark-raised: #3a2f35;
-  --color-dark-line: #4a3c43;
-  --color-dark-ink: #f7ece9;
-  --color-dark-ink-soft: #c4aeb8;
+  /* dark mode — starry night */
+  --color-dark-bg: #110e22;
+  --color-dark-surface: #1c1735;
+  --color-dark-raised: #282046;
+  --color-dark-line: #3a2f5c;
+  --color-dark-ink: #f5eefc;
+  --color-dark-ink-soft: #bcb0da;
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-marquee: marquee 32s linear infinite;
@@ -259,14 +260,22 @@ h3,
     0 3px 8px rgba(139, 111, 99, 0.08);
 }
 
+/* dark mode: cards float in the night with a soft moonlit glow */
 .dark .soft-card,
-.dark .soft-card-hover:hover,
 .dark .soft-pill {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 6px 16px rgba(0, 0, 0, 0.35),
-    0 16px 36px rgba(0, 0, 0, 0.25);
+    inset 0 1px 0 rgba(222, 208, 240, 0.08),
+    0 6px 16px rgba(5, 3, 15, 0.45),
+    0 0 24px rgba(160, 130, 220, 0.12);
 }
+
+.dark .soft-card-hover:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(222, 208, 240, 0.12),
+    0 10px 24px rgba(5, 3, 15, 0.5),
+    0 0 36px rgba(180, 150, 240, 0.25);
+}
+
 
 .glow-pink {
   box-shadow:
