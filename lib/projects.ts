@@ -9,7 +9,7 @@ export const projects: Project[] = [
   {
     name: 'My website',
     description: 'Bla bla bla bla',
-    link: 'bla',
+    link: 'https://makya-portfolio.vercel.app/',
     photo: '/images/projects/blackkitty.jpeg',
   },
   {
