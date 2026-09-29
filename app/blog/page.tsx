@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Navbar from '@/components/layout/navbar'
 import FloatingDecor from '@/components/shared/floatingDecor'
@@ -25,11 +26,12 @@ const MILESTONES = [25, 50, 75, 100]
 type EntryCardProps = {
   entry: Entry
   index: number
+  canDelete: boolean
   deletingId: string | null
   onDelete: (id: string) => void
 }
 
-function EntryCard({ entry, index, deletingId, onDelete }: EntryCardProps) {
+function EntryCard({ entry, index, canDelete, deletingId, onDelete }: EntryCardProps) {
   const glow = usePointerGlow({ tilt: 4 })
 
   return (
@@ -38,16 +40,18 @@ function EntryCard({ entry, index, deletingId, onDelete }: EntryCardProps) {
       className={`${dreamy.glass} ${dreamy.glow} ${dreamy.tilt} ${styles.entry}`}
       style={{ animationDelay: `${index * 0.06}s` }}
     >
-      <button
-        type="button"
-        onClick={() => onDelete(entry.id)}
-        disabled={deletingId !== null}
-        className={styles.delete}
-        aria-label={`Delete entry from ${entry.date}`}
-        title="Delete entry"
-      >
-        {deletingId === entry.id ? '…' : '✕'}
-      </button>
+      {canDelete && (
+        <button
+          type="button"
+          onClick={() => onDelete(entry.id)}
+          disabled={deletingId !== null}
+          className={styles.delete}
+          aria-label={`Delete entry from ${entry.date}`}
+          title="Delete entry"
+        >
+          {deletingId === entry.id ? '…' : '✕'}
+        </button>
+      )}
 
       <div className="mb-4 flex flex-wrap items-center gap-3 pr-10">
         <span className={`heading-font ${styles.entryDate}`}>{entry.date}</span>
@@ -70,6 +74,7 @@ function EntryCard({ entry, index, deletingId, onDelete }: EntryCardProps) {
 export default function Blog() {
   const progressGlow = usePointerGlow()
   const formGlow = usePointerGlow()
+  const loginGlow = usePointerGlow()
 
   const [entries, setEntries] = useState<Entry[]>([])
   const [date, setDate] = useState('')
@@ -80,6 +85,11 @@ export default function Blog() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   // brief "saved" sparkle message after adding an entry
   const [justSaved, setJustSaved] = useState(false)
+  // only the owner (logged in with ADMIN_PASSWORD) can add or delete entries
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
 
   const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0)
   const progressPercent = Math.min((totalHours / GOAL_HOURS) * 100, 100)
@@ -98,7 +108,52 @@ export default function Blog() {
 
   useEffect(() => {
     fetchEntries()
+    fetch('/api/admin')
+      .then((res) => res.json())
+      .then((data) => setIsAdmin(!!data.isAdmin))
+      .catch(() => setIsAdmin(false))
   }, [])
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+
+    setLoginError(!res.ok)
+    setIsAdmin(res.ok)
+    if (res.ok) {
+      setShowLogin(false)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+    setPassword('')
+  }
+
+  function closeLogin() {
+    setShowLogin(false)
+    setLoginError(false)
+    setPassword('')
+  }
+
+  // close the login popup with Escape
+  useEffect(() => {
+    if (!showLogin) return
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeLogin()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [showLogin])
+
+  async function handleLogout() {
+    await fetch('/api/admin', { method: 'DELETE' })
+    setIsAdmin(false)
+  }
 
   async function fetchEntries() {
     setLoading(true)
@@ -128,12 +183,14 @@ export default function Blog() {
 
     setSaving(true)
 
-    const { error } = await supabase
-      .from('entries')
-      .insert([{ date, hours: parsedHours, note }])
+    const res = await fetch('/api/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, hours: parsedHours, note }),
+    })
 
-    if (error) {
-      console.error('Error adding entry:', error.message)
+    if (!res.ok) {
+      console.error('Error adding entry:', res.status)
       setSaving(false)
       return
     }
@@ -154,10 +211,10 @@ export default function Blog() {
 
     setDeletingId(id)
 
-    const { error } = await supabase.from('entries').delete().eq('id', id)
+    const res = await fetch(`/api/entries?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
 
-    if (error) {
-      console.error('Error deleting entry:', error.message)
+    if (!res.ok) {
+      console.error('Error deleting entry:', res.status)
       setDeletingId(null)
       return
     }
@@ -282,94 +339,96 @@ export default function Blog() {
           </div>
         </section>
 
-        {/* Add entry form */}
-        <section className="mb-16">
-          <div className="mb-5 flex items-center gap-3">
-            <div>
-              <h2 className={`heading-font text-xl font-bold ${styles.entryDate}`}>
-                Add a little update
-              </h2>
-              <p className={`mt-1 text-sm ${styles.muted}`}>What did today look like?</p>
-            </div>
-          </div>
-
-          <form
-            {...formGlow}
-            onSubmit={handleSubmit}
-            className={`${dreamy.glass} ${dreamy.glow} flex flex-col gap-6 rounded-[2rem] p-6 sm:p-8`}
-          >
-            <div className="grid gap-5 sm:grid-cols-[1fr_180px]">
+        {/* Add entry form, owner only */}
+        {isAdmin && (
+          <section className="mb-16">
+            <div className="mb-5 flex items-center gap-3">
               <div>
-                <label htmlFor="date" className={styles.label}>
-                  Date
-                </label>
-
-                <input
-                  id="date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                  className={styles.input}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="hours" className={styles.label}>
-                  Hours
-                </label>
-
-                <input
-                  id="hours"
-                  type="number"
-                  step="0.5"
-                  min="0.5"
-                  max="24"
-                  value={hours}
-                  onChange={(e) => setHours(e.target.value)}
-                  placeholder="8"
-                  required
-                  className={styles.input}
-                />
+                <h2 className={`heading-font text-xl font-bold ${styles.entryDate}`}>
+                  Add a little update
+                </h2>
+                <p className={`mt-1 text-sm ${styles.muted}`}>What did today look like?</p>
               </div>
             </div>
 
-            <div>
-              <label htmlFor="note" className={styles.label}>
-                Today&apos;s little story
-              </label>
+            <form
+              {...formGlow}
+              onSubmit={handleSubmit}
+              className={`${dreamy.glass} ${dreamy.glow} flex flex-col gap-6 rounded-[2rem] p-6 sm:p-8`}
+            >
+              <div className="grid gap-5 sm:grid-cols-[1fr_180px]">
+                <div>
+                  <label htmlFor="date" className={styles.label}>
+                    Date
+                  </label>
 
-              <textarea
-                id="note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={4}
-                placeholder="Sat in on a client call, fixed a form validation bug..."
-                required
-                className={`${styles.input} resize-y`}
-              />
-            </div>
+                  <input
+                    id="date"
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                    className={styles.input}
+                  />
+                </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              {justSaved ? (
-                <p className={styles.saved} aria-live="polite">
-                  ✨ Saved! Another little star in your sky
-                </p>
-              ) : (
-                <p className={`text-xs ${styles.muted}`}>One day at a time ✧</p>
-              )}
+                <div>
+                  <label htmlFor="hours" className={styles.label}>
+                    Hours
+                  </label>
 
-              <button
-                type="submit"
-                disabled={saving}
-                className={`${dreamy.btn} ${dreamy.btnPrimary} ${styles.submit}`}
-              >
-                {saving ? 'Adding...' : 'Add entry'}
-                <span aria-hidden="true">🌙</span>
-              </button>
-            </div>
-          </form>
-        </section>
+                  <input
+                    id="hours"
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    max="24"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                    placeholder="8"
+                    required
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="note" className={styles.label}>
+                  Today&apos;s little story
+                </label>
+
+                <textarea
+                  id="note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  rows={4}
+                  placeholder="Sat in on a client call, fixed a form validation bug..."
+                  required
+                  className={`${styles.input} resize-y`}
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                {justSaved ? (
+                  <p className={styles.saved} aria-live="polite">
+                    ✨ Saved! Another little star in your sky
+                  </p>
+                ) : (
+                  <p className={`text-xs ${styles.muted}`}>One day at a time ✧</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className={`${dreamy.btn} ${dreamy.btnPrimary} ${styles.submit}`}
+                >
+                  {saving ? 'Adding...' : 'Add entry'}
+                  <span aria-hidden="true">🌙</span>
+                </button>
+              </div>
+            </form>
+          </section>
+        )}
 
         {/* Entries */}
         <section>
@@ -382,8 +441,33 @@ export default function Blog() {
               </h2>
             </div>
 
-            <span className={`text-sm ${styles.muted}`}>{entries.length} logged</span>
+            <div className="flex items-center gap-3">
+              <span className={`text-sm ${styles.muted}`}>{entries.length} logged</span>
+
+              {/* owner login: a little moon key that opens the login popup */}
+              {!isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => setShowLogin(true)}
+                  className={styles.moonKey}
+                  aria-haspopup="dialog"
+                  aria-label="Owner login"
+                  title="Owner login"
+                >
+                  ☾
+                </button>
+              )}
+
+              {/* owner is logged in: the moon swaps for a little "log out" pill */}
+              {isAdmin && (
+                <button type="button" onClick={handleLogout} className={styles.logoutPill}>
+                  <span aria-hidden="true">☾</span>
+                  Log out
+                </button>
+              )}
+            </div>
           </div>
+
 
           {loading && (
             <div className={`${dreamy.glass} rounded-3xl p-8 text-center`}>
@@ -412,6 +496,7 @@ export default function Blog() {
                   key={entry.id}
                   entry={entry}
                   index={index}
+                  canDelete={isAdmin}
                   deletingId={deletingId}
                   onDelete={handleDelete}
                 />
@@ -459,6 +544,73 @@ export default function Blog() {
           </Link>
         </div>
       </div>
+
+      {/* Owner login popup, portalled to body so it floats above the navbar */}
+      {!isAdmin &&
+        showLogin &&
+        createPortal(
+          <div className={styles.loginOverlay} onClick={closeLogin}>
+            <form
+              {...loginGlow}
+              onSubmit={handleLogin}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="owner-login-title"
+              className={`${dreamy.glass} ${dreamy.glow} ${styles.loginCard}`}
+            >
+              <span aria-hidden="true" className={styles.loginMoon}>
+                🌙
+              </span>
+
+              <button
+                type="button"
+                onClick={closeLogin}
+                className={styles.delete}
+                aria-label="Close"
+                title="Close"
+              >
+                ✕
+              </button>
+
+              <h2 id="owner-login-title" className={`heading-font text-lg font-bold ${styles.entryDate}`}>
+                Owner&apos;s corner
+              </h2>
+              <p className={`mt-1 mb-5 text-sm ${styles.muted}`}>
+                Just me, tucking in today&apos;s story ✧
+              </p>
+
+              <label htmlFor="owner-password" className="sr-only">
+                Owner password
+              </label>
+              <input
+                id="owner-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Secret password"
+                autoFocus
+                required
+                className={styles.input}
+              />
+
+              {loginError && (
+                <p className={`${styles.saved} mt-3`} aria-live="polite">
+                  Hmm, that&apos;s not quite it ✧
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className={`${dreamy.btn} ${dreamy.btnPrimary} mt-5 w-full justify-center`}
+              >
+                Unlock
+                <span aria-hidden="true">✨</span>
+              </button>
+            </form>
+          </div>,
+          document.body
+        )}
     </main>
   )
 }
