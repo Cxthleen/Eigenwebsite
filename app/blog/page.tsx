@@ -26,13 +26,128 @@ const MILESTONES = [25, 50, 75, 100]
 type EntryCardProps = {
   entry: Entry
   index: number
-  canDelete: boolean
+  isOwner: boolean
   deletingId: string | null
   onDelete: (id: string) => void
+  onSave: (id: string, updated: Omit<Entry, 'id'>) => Promise<boolean>
 }
 
-function EntryCard({ entry, index, canDelete, deletingId, onDelete }: EntryCardProps) {
+function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: EntryCardProps) {
   const glow = usePointerGlow({ tilt: 4 })
+
+  const [editing, setEditing] = useState(false)
+  const [date, setDate] = useState(entry.date)
+  const [hours, setHours] = useState(String(entry.hours))
+  const [note, setNote] = useState(entry.note)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(false)
+
+  function startEditing() {
+    setDate(entry.date)
+    setHours(String(entry.hours))
+    setNote(entry.note)
+    setSaveError(false)
+    setEditing(true)
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault()
+
+    const parsedHours = Number(hours)
+    if (!date || !note.trim() || !Number.isFinite(parsedHours) || parsedHours <= 0 || saving) return
+
+    setSaving(true)
+    const ok = await onSave(entry.id, { date, hours: parsedHours, note })
+    setSaving(false)
+    setSaveError(!ok)
+    if (ok) setEditing(false)
+  }
+
+  if (editing) {
+    return (
+      <form
+        onSubmit={handleSave}
+        className={`${dreamy.glass} ${dreamy.glow} ${styles.entry} flex flex-col gap-5`}
+        aria-label={`Edit entry from ${entry.date}`}
+      >
+        <div className="grid gap-5 sm:grid-cols-[1fr_180px]">
+          <div>
+            <label htmlFor={`edit-date-${entry.id}`} className={styles.label}>
+              Date
+            </label>
+            <input
+              id={`edit-date-${entry.id}`}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+
+          <div>
+            <label htmlFor={`edit-hours-${entry.id}`} className={styles.label}>
+              Hours
+            </label>
+            <input
+              id={`edit-hours-${entry.id}`}
+              type="number"
+              step="0.5"
+              min="0.5"
+              max="24"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              required
+              className={styles.input}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor={`edit-note-${entry.id}`} className={styles.label}>
+            The little story
+          </label>
+          <textarea
+            id={`edit-note-${entry.id}`}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={4}
+            required
+            className={`${styles.input} resize-y`}
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          {saveError ? (
+            <p className={styles.saved} aria-live="polite">
+              Hmm, that didn&apos;t save, try again? ✧
+            </p>
+          ) : (
+            <p className={`text-xs ${styles.muted}`}>Tweaking a memory ✧</p>
+          )}
+
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              disabled={saving}
+              className={`${dreamy.btn} ${dreamy.btnGhost}`}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className={`${dreamy.btn} ${dreamy.btnPrimary} ${styles.submit}`}
+            >
+              {saving ? 'Saving...' : 'Save'}
+              <span aria-hidden="true">✨</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    )
+  }
 
   return (
     <article
@@ -40,20 +155,33 @@ function EntryCard({ entry, index, canDelete, deletingId, onDelete }: EntryCardP
       className={`${dreamy.glass} ${dreamy.glow} ${dreamy.tilt} ${styles.entry}`}
       style={{ animationDelay: `${index * 0.06}s` }}
     >
-      {canDelete && (
-        <button
-          type="button"
-          onClick={() => onDelete(entry.id)}
-          disabled={deletingId !== null}
-          className={styles.delete}
-          aria-label={`Delete entry from ${entry.date}`}
-          title="Delete entry"
-        >
-          {deletingId === entry.id ? '…' : '✕'}
-        </button>
+      {isOwner && (
+        <div className={styles.cardActions}>
+          <button
+            type="button"
+            onClick={startEditing}
+            disabled={deletingId !== null}
+            className={styles.edit}
+            aria-label={`Edit entry from ${entry.date}`}
+            title="Edit entry"
+          >
+            ✎
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onDelete(entry.id)}
+            disabled={deletingId !== null}
+            className={styles.delete}
+            aria-label={`Delete entry from ${entry.date}`}
+            title="Delete entry"
+          >
+            {deletingId === entry.id ? '…' : '✕'}
+          </button>
+        </div>
       )}
 
-      <div className="mb-4 flex flex-wrap items-center gap-3 pr-10">
+      <div className="mb-4 flex flex-wrap items-center gap-3 pr-20">
         <span className={`heading-font ${styles.entryDate}`}>{entry.date}</span>
 
         <span className={styles.hoursPill}>
@@ -224,6 +352,22 @@ export default function Blog() {
     Math.min(page, Math.max(1, Math.ceil((entries.length - 1) / ENTRIES_PER_PAGE)))
   )
     setDeletingId(null)
+  }
+
+  async function handleUpdate(id: string, updated: Omit<Entry, 'id'>) {
+    const res = await fetch('/api/entries', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, ...updated }),
+    })
+
+    if (!res.ok) {
+      console.error('Error updating entry:', res.status)
+      return false
+    }
+
+    await fetchEntries()
+    return true
   }
 
   return (
@@ -496,9 +640,10 @@ export default function Blog() {
                   key={entry.id}
                   entry={entry}
                   index={index}
-                  canDelete={isAdmin}
+                  isOwner={isAdmin}
                   deletingId={deletingId}
                   onDelete={handleDelete}
+                  onSave={handleUpdate}
                 />
               ))}
             </div>
