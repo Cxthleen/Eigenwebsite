@@ -4,11 +4,11 @@ import { supabaseAdmin } from '@/lib/supabaseAdmin'
 
 const unauthorized = () => NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-type EntryInput = { date: string; hours: number; note: string }
+type EntryInput = { date: string; hours: number; note: string; learned: string | null }
 
 // shared validation for adding and editing entries
 function parseEntry(body: Record<string, unknown>): EntryInput | null {
-  const { date, hours, note } = body
+  const { date, hours, note, learned } = body
   const parsedHours = Number(hours)
 
   if (
@@ -18,12 +18,14 @@ function parseEntry(body: Record<string, unknown>): EntryInput | null {
     !note.trim() ||
     !Number.isFinite(parsedHours) ||
     parsedHours <= 0 ||
-    parsedHours > 24
+    parsedHours > 24 ||
+    (learned != null && typeof learned !== 'string')
   ) {
     return null
   }
 
-  return { date, hours: parsedHours, note }
+  // "what I learned" is optional, store empty as null
+  return { date, hours: parsedHours, note, learned: learned?.trim() || null }
 }
 
 export async function POST(request: Request) {

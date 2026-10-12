@@ -16,6 +16,7 @@ type Entry = {
   date: string
   hours: number
   note: string
+  learned?: string | null
 }
 
 const GOAL_HOURS = 1196
@@ -39,6 +40,7 @@ function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: Entr
   const [date, setDate] = useState(entry.date)
   const [hours, setHours] = useState(String(entry.hours))
   const [note, setNote] = useState(entry.note)
+  const [learned, setLearned] = useState(entry.learned ?? '')
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(false)
 
@@ -46,6 +48,7 @@ function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: Entr
     setDate(entry.date)
     setHours(String(entry.hours))
     setNote(entry.note)
+    setLearned(entry.learned ?? '')
     setSaveError(false)
     setEditing(true)
   }
@@ -57,7 +60,7 @@ function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: Entr
     if (!date || !note.trim() || !Number.isFinite(parsedHours) || parsedHours <= 0 || saving) return
 
     setSaving(true)
-    const ok = await onSave(entry.id, { date, hours: parsedHours, note })
+    const ok = await onSave(entry.id, { date, hours: parsedHours, note, learned })
     setSaving(false)
     setSaveError(!ok)
     if (ok) setEditing(false)
@@ -113,6 +116,19 @@ function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: Entr
             onChange={(e) => setNote(e.target.value)}
             rows={4}
             required
+            className={`${styles.input} resize-y`}
+          />
+        </div>
+
+        <div>
+          <label htmlFor={`edit-learned-${entry.id}`} className={styles.label}>
+            What I learned
+          </label>
+          <textarea
+            id={`edit-learned-${entry.id}`}
+            value={learned}
+            onChange={(e) => setLearned(e.target.value)}
+            rows={3}
             className={`${styles.input} resize-y`}
           />
         </div>
@@ -192,6 +208,15 @@ function EntryCard({ entry, index, isOwner, deletingId, onDelete, onSave }: Entr
 
       <p className={styles.note}>{entry.note}</p>
 
+      {entry.learned && (
+        <div className={styles.learned}>
+          <p className={styles.learnedLabel}>
+            <span aria-hidden="true" className={styles.yellowStar}>✦</span> What I learned
+          </p>
+          <p className={styles.note}>{entry.learned}</p>
+        </div>
+      )}
+
       <span aria-hidden="true" className={styles.entrySparkle}>
         ✦
       </span>
@@ -208,6 +233,7 @@ export default function Blog() {
   const [date, setDate] = useState('')
   const [hours, setHours] = useState('')
   const [note, setNote] = useState('')
+  const [learned, setLearned] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -314,7 +340,7 @@ export default function Blog() {
     const res = await fetch('/api/entries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date, hours: parsedHours, note }),
+      body: JSON.stringify({ date, hours: parsedHours, note, learned }),
     })
 
     if (!res.ok) {
@@ -326,6 +352,7 @@ export default function Blog() {
     setDate('')
     setHours('')
     setNote('')
+    setLearned('')
 
     await fetchEntries()
     setCurrentPage(1)
@@ -413,7 +440,9 @@ export default function Blog() {
           >
             <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className={styles.eyebrow}>✧ Your progress</p>
+                <p className={styles.eyebrow}>
+                  <span aria-hidden="true" className={styles.yellowStar}>✧</span> Your progress
+                </p>
 
                 <p
                   key={totalHours}
@@ -548,6 +577,21 @@ export default function Blog() {
                   rows={4}
                   placeholder="Sat in on a client call, fixed a form validation bug..."
                   required
+                  className={`${styles.input} resize-y`}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="learned" className={styles.label}>
+                  What I learned
+                </label>
+
+                <textarea
+                  id="learned"
+                  value={learned}
+                  onChange={(e) => setLearned(e.target.value)}
+                  rows={3}
+                  placeholder="How to read a stack trace without panicking..."
                   className={`${styles.input} resize-y`}
                 />
               </div>

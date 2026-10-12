@@ -586,3 +586,35 @@
     animation: none;
   }
 }
+
+/* "what I learned" block under an entry's story */
+.learned {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed color-mix(in srgb, var(--color-lilac-deep) 30%, transparent);
+}
+
+.learnedLabel {
+  margin-bottom: 0.35rem;
+  color: var(--color-lilac-deep);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+:global(.dark) .learned {
+  border-top-color: color-mix(in srgb, var(--color-dark-ink-soft) 30%, transparent);
+}
+
+:global(.dark) .learnedLabel {
+  color: var(--color-dark-ink-soft);
+}
+
+.yellowStar {
+  color: #e8b730;
+}
+
+:global(.dark) .yellowStar {
+  color: #fff3b0;
+}
