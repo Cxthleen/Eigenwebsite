@@ -35,7 +35,6 @@
   width: 70%;
   height: 36%;
   /* the gradients are already soft, so no (expensive) blur filter needed */
-  opacity: calc(1 - var(--p, 0));
   animation: aurora 22s ease-in-out infinite alternate;
 }
 

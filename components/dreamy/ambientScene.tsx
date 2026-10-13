@@ -93,7 +93,7 @@ export default function AmbientScene({ variant = 0, cloudBank = false }: Props) 
   const layout = LAYOUTS[variant % LAYOUTS.length]
 
   return (
-    <div ref={ref} className={styles.scene} aria-hidden="true">
+    <div ref={ref} className={styles.scene} data-sky-layer aria-hidden="true">
       <div className={styles.depth} data-depth="-5 -3">
         <div
           className={styles.aurora}

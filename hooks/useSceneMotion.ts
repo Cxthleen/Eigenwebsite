@@ -74,3 +74,36 @@ export function usePauseOffscreen(ref: RefObject<HTMLElement | null>) {
     return () => io.disconnect()
   }, [ref])
 }
+
+/*
+ * While the page is scrolling, pauses the decorative sky animations
+ * (every element marked `data-sky-layer`) and resumes them shortly after
+ * scrolling stops. Nobody notices twinkles holding still mid-scroll, and
+ * it frees the browser to keep scrolling smooth.
+ */
+export function usePauseSkyWhileScrolling() {
+  useEffect(() => {
+    let scrolling = false
+    let timer = 0
+
+    const set = (on: boolean) => {
+      scrolling = on
+      for (const el of document.querySelectorAll('[data-sky-layer]')) {
+        el.toggleAttribute('data-scrolling', on)
+      }
+    }
+
+    const onScroll = () => {
+      if (!scrolling) set(true)
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => set(false), 200)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('scroll', onScroll)
+      set(false)
+    }
+  }, [])
+}

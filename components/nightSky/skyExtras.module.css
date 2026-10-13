@@ -141,10 +141,14 @@
   stroke-dasharray: 3 4;
 }
 
+/*
+ * The dots don't twinkle one by one: animating SVG shapes forces the
+ * whole page to re-layout every frame (scroll lag). The constellation
+ * as a whole still glows in and out (above), which is cheap.
+ */
 .constellation circle {
   fill: #fff8f0;
   filter: drop-shadow(0 0 2px #fff);
-  animation: twinkle 3s ease-in-out infinite;
 }
 
 :global(.sky-day) .constellation polyline {
@@ -296,7 +300,6 @@
   .cloud,
   .orb,
   .constellation,
-  .constellation circle,
   .sparkle,
   .planet,
   .crescent {

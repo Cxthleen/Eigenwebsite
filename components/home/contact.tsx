@@ -35,7 +35,13 @@ const WISH_MESSAGES = [
   'Wishes are free, so make another 💫',
 ]
 
-type Wish = { id: number; dx: number }
+/* each wish arcs up to (dx, dy) and pops into sparkles there */
+type Wish = { id: number; dx: number; dy: number }
+
+/* how many fading sparkles follow the wish to form its tail */
+const TRAIL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+/* the little ring of sparkles it bursts into */
+const POP = [0, 1, 2, 3, 4, 5, 6, 7]
 
 export default function Contact() {
   const cardGlow = usePointerGlow()
@@ -43,13 +49,20 @@ export default function Contact() {
   const [count, setCount] = useState(0)
 
   function makeWish() {
-    const wish = { id: Date.now(), dx: Math.round((Math.random() - 0.5) * 320) }
+    const side = Math.random() < 0.5 ? -1 : 1
+    const wish = {
+      id: Date.now(),
+      dx: Math.round(side * (60 + Math.random() * 140)),
+      dy: Math.round(-(170 + Math.random() * 80)),
+    }
     setWishes((w) => [...w, wish])
     setCount((c) => c + 1)
     window.setTimeout(() => {
       setWishes((w) => w.filter((x) => x.id !== wish.id))
-    }, 1400)
+    }, 2200)
   }
+
+  const lastWish = wishes[wishes.length - 1]
 
   return (
     <section
@@ -99,23 +112,55 @@ export default function Contact() {
           </div>
 
           <div className={styles.wishArea}>
-            {wishes.map((wish) => (
-              <span
-                key={wish.id}
-                className={styles.flyer}
-                style={
-                  {
-                    '--dx': `${wish.dx}px`,
-                    // point the tail opposite the direction of travel (dx, -220)
-                    '--trail': `${Math.round(Math.atan2(-220, wish.dx) * (180 / Math.PI))}deg`,
-                  } as CSSProperties
-                }
-                aria-hidden="true"
-              />
-            ))}
-
             <button type="button" onClick={makeWish} className={styles.wishButton}>
-              <span className={styles.wishStar} aria-hidden="true">✦</span>
+              <span className={styles.starWrap}>
+                {wishes.map((wish) => (
+                  <span
+                    key={wish.id}
+                    className={styles.wish}
+                    style={{ '--dx': `${wish.dx}px`, '--dy': `${wish.dy}px` } as CSSProperties}
+                    aria-hidden="true"
+                  >
+                    {/* sparkles trailing behind on the same curve = a soft, bending tail */}
+                    {TRAIL.map((i) => (
+                      <span key={i} className={styles.arcX} style={{ '--i': i } as CSSProperties}>
+                        <span className={styles.arcY}>
+                          <span className={styles.trail} />
+                        </span>
+                      </span>
+                    ))}
+                    <span className={styles.arcX}>
+                      <span className={styles.arcY}>
+                        <span className={styles.head}>✦</span>
+                      </span>
+                    </span>
+
+                    {/* at the top it blooms and pops into a ring of sparkles */}
+                    <span className={styles.pop}>
+                      <span className={styles.popGlow} />
+                      {POP.map((i) => (
+                        <span
+                          key={i}
+                          className={styles.spark}
+                          style={{ '--a': `${i * 45 + (wish.id % 30)}deg` } as CSSProperties}
+                        >
+                          ✦
+                        </span>
+                      ))}
+                    </span>
+                  </span>
+                ))}
+
+                {/* the button's own star winks and sends out a ripple on each wish */}
+                {lastWish && <span key={`ripple-${lastWish.id}`} className={styles.ripple} aria-hidden="true" />}
+                <span
+                  key={lastWish ? `star-${lastWish.id}` : 'star'}
+                  className={`${styles.wishStar} ${lastWish ? styles.wink : ''}`}
+                  aria-hidden="true"
+                >
+                  ✦
+                </span>
+              </span>
               Make a wish
             </button>
           </div>

@@ -109,14 +109,11 @@ const MOTES = [
   { left: '54%', size: 3, dur: 18, delay: -10, sway: -12 },
 ]
 
-export default function HeroScene({ progress }: { progress: number }) {
+export default function HeroScene() {
   return (
-    <div
-      className={styles.scene}
-      style={{ '--p': String(progress) } as Vars}
-      aria-hidden="true"
-    >
-      <div className={styles.depth} data-depth="-6 -4">
+    <div className={styles.scene} data-sky-layer aria-hidden="true">
+      {/* data-scroll-fade: heroMoon fades this out as you scroll */}
+      <div className={styles.depth} data-depth="-6 -4" data-scroll-fade>
         <div className={`${styles.aurora} ${styles.auroraA}`} />
         <div className={`${styles.aurora} ${styles.auroraB}`} />
       </div>

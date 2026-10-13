@@ -57,6 +57,11 @@ html {
   }
 }
 
+/* sky animations hold still while the page scrolls (see usePauseSkyWhileScrolling) */
+[data-sky-layer][data-scrolling] * {
+  animation-play-state: paused;
+}
+
 /* the light-mode hero covers the site-wide sky, so that one can rest (see heroMoon) */
 html[data-hero-covers]:not(.dark) .site-sky-day * {
   animation-play-state: paused;
