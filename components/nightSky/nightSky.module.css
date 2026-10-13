@@ -20,7 +20,7 @@
 .nebulaB {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(60px);
+  /* soft radial gradients; a live blur here cost a lot every frame */
   animation: drift 24s ease-in-out infinite alternate;
 }
 
@@ -29,10 +29,12 @@
   left: -10%;
   width: 55%;
   height: 55%;
+  /* closest-side: fades out fully inside the box, so no edges show */
   background: radial-gradient(
-    circle,
-    rgba(150, 120, 210, 0.35),
-    rgba(150, 120, 210, 0) 70%
+    closest-side,
+    rgba(150, 120, 210, 0.3),
+    rgba(150, 120, 210, 0.12) 50%,
+    rgba(150, 120, 210, 0)
   );
 }
 
@@ -41,10 +43,12 @@
   right: -12%;
   width: 50%;
   height: 50%;
+  /* closest-side: fades out fully inside the box, so no edges show */
   background: radial-gradient(
-    circle,
-    rgba(230, 150, 190, 0.25),
-    rgba(230, 150, 190, 0) 70%
+    closest-side,
+    rgba(230, 150, 190, 0.22),
+    rgba(230, 150, 190, 0.09) 50%,
+    rgba(230, 150, 190, 0)
   );
   animation-duration: 30s;
   animation-direction: alternate-reverse;
@@ -130,17 +134,17 @@
 
 .day .nebulaA {
   background: radial-gradient(
-    circle,
+    closest-side,
     rgba(222, 208, 240, 0.7),
-    rgba(222, 208, 240, 0) 70%
+    rgba(222, 208, 240, 0)
   );
 }
 
 .day .nebulaB {
   background: radial-gradient(
-    circle,
+    closest-side,
     rgba(255, 209, 227, 0.6),
-    rgba(255, 209, 227, 0) 70%
+    rgba(255, 209, 227, 0)
   );
 }
 

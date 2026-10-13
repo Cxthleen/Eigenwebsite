@@ -55,16 +55,33 @@ function sparklePath(ctx: CanvasRenderingContext2D, size: number) {
   ctx.quadraticCurveTo(-k, -k, 0, -size)
 }
 
-// soft glowing orb — a radial gradient is much cheaper than shadowBlur
+// soft glowing orb, pre-drawn once per colour and stamped with drawImage —
+// much cheaper than building a gradient for every particle every frame
+const SPRITE = 64
+const sprites = new Map<string, HTMLCanvasElement>()
+
+function glowSprite(rgb: string) {
+  let sprite = sprites.get(rgb)
+  if (!sprite) {
+    sprite = document.createElement('canvas')
+    sprite.width = sprite.height = SPRITE
+    const c = sprite.getContext('2d')!
+    const half = SPRITE / 2
+    const g = c.createRadialGradient(half, half, 0, half, half, half)
+    g.addColorStop(0, `rgba(${rgb}, 1)`)
+    g.addColorStop(0.35, `rgba(${rgb}, 0.45)`)
+    g.addColorStop(1, `rgba(${rgb}, 0)`)
+    c.fillStyle = g
+    c.fillRect(0, 0, SPRITE, SPRITE)
+    sprites.set(rgb, sprite)
+  }
+  return sprite
+}
+
 function glow(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, rgb: string, alpha: number) {
-  const g = ctx.createRadialGradient(x, y, 0, x, y, r)
-  g.addColorStop(0, `rgba(${rgb}, ${alpha})`)
-  g.addColorStop(0.35, `rgba(${rgb}, ${alpha * 0.45})`)
-  g.addColorStop(1, `rgba(${rgb}, 0)`)
-  ctx.fillStyle = g
-  ctx.beginPath()
-  ctx.arc(x, y, r, 0, Math.PI * 2)
-  ctx.fill()
+  ctx.globalAlpha = alpha
+  ctx.drawImage(glowSprite(rgb), x - r, y - r, r * 2, r * 2)
+  ctx.globalAlpha = 1
 }
 
 const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)]

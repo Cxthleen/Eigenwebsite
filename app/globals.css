@@ -57,6 +57,11 @@ html {
   }
 }
 
+/* the light-mode hero covers the site-wide sky, so that one can rest (see heroMoon) */
+html[data-hero-covers]:not(.dark) .site-sky-day * {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float {
     animation: none;

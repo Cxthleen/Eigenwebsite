@@ -15,8 +15,9 @@
   width: 280px;
   height: 80px;
   border-radius: 9999px;
-  background: rgba(200, 180, 240, 0.08);
-  filter: blur(18px);
+  --puff: rgba(200, 180, 240, 0.08);
+  /* soft-edged gradients instead of a blur filter, which is costly on a moving layer */
+  background: radial-gradient(closest-side, var(--puff) 40%, transparent);
   transform: scale(var(--scale));
   animation: drift-across var(--dur) linear var(--delay) infinite;
 }
@@ -45,8 +46,7 @@
 }
 
 :global(.sky-day) .cloud {
-  background: rgba(255, 255, 255, 0.55);
-  filter: blur(12px);
+  --puff: rgba(255, 255, 255, 0.55);
 }
 
 @keyframes drift-across {
@@ -69,37 +69,41 @@
   position: absolute;
   border-radius: 9999px;
   opacity: 0.35;
-  filter: blur(2px);
   animation: bob var(--dur) ease-in-out var(--delay) infinite;
 }
 
 .lilac {
-  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7), rgba(180, 150, 240, 0.35) 60%, transparent 72%);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.6), transparent 30%),
+    radial-gradient(closest-side, rgba(180, 150, 240, 0.35) 55%, transparent);
 }
 
 .pink {
-  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7), rgba(255, 160, 200, 0.35) 60%, transparent 72%);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.6), transparent 30%),
+    radial-gradient(closest-side, rgba(255, 160, 200, 0.35) 55%, transparent);
 }
 
 .peach {
-  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7), rgba(255, 200, 160, 0.35) 60%, transparent 72%);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.6), transparent 30%),
+    radial-gradient(closest-side, rgba(255, 200, 160, 0.35) 55%, transparent);
 }
 
 :global(.dark) .orb {
   opacity: 0.5;
-  filter: blur(6px);
 }
 
 :global(.dark) .lilac {
-  background: radial-gradient(circle, rgba(180, 150, 240, 0.35), transparent 70%);
+  background: radial-gradient(closest-side, rgba(180, 150, 240, 0.35), transparent);
 }
 
 :global(.dark) .pink {
-  background: radial-gradient(circle, rgba(255, 150, 200, 0.25), transparent 70%);
+  background: radial-gradient(closest-side, rgba(255, 150, 200, 0.25), transparent);
 }
 
 :global(.dark) .peach {
-  background: radial-gradient(circle, rgba(255, 200, 160, 0.22), transparent 70%);
+  background: radial-gradient(closest-side, rgba(255, 200, 160, 0.22), transparent);
 }
 
 @keyframes bob {

@@ -1,8 +1,10 @@
 /*
- * Intro animation for the hero: a star falls onto the
- * portrait and bursts into little stars.
+ * Intro animation for the hero: a shooting star glides in
+ * diagonally, shedding stardust, and lands on the portrait
+ * in a soft bloom of moonlight and floating sparkles.
  *
- * --impact-y is set from JS on the .overlay element.
+ * --impact-y is set from JS on the .overlay element,
+ * --angle (direction of travel) on .shootingStar.
  */
 
 .overlay {
@@ -19,14 +21,77 @@
  * ------------------------------------------------
  */
 
-/* The fall itself is animated from JS (see index.tsx). */
+/* The glide itself is animated from JS (see index.tsx). */
 .shootingStar {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   opacity: 0;
+}
+
+/* long tail pointing back along the path */
+.tail {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(calc(var(--angle, 90deg) + 180deg));
+}
+
+.tailCore,
+.tailGlow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(-50%);
+}
+
+/* the bright tapered streak */
+.tailCore {
+  width: 240px;
+  height: 7px;
+  clip-path: polygon(0 0, 100% 46%, 100% 54%, 0 100%);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 209, 227, 0.6) 25%,
+    rgba(227, 212, 255, 0.28) 60%,
+    transparent
+  );
+}
+
+/* a wider, fainter glow around it */
+.tailGlow {
+  width: 200px;
+  height: 24px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    farthest-side at 0 50%,
+    rgba(255, 236, 246, 0.5),
+    rgba(222, 200, 255, 0.16) 50%,
+    transparent
+  );
+}
+
+/* soft halo around the head */
+.headGlow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 220, 236, 0.3) 45%,
+    transparent
+  );
+  animation: pulse 0.6s ease-in-out infinite alternate;
 }
 
 .starHead {
@@ -34,39 +99,38 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  fill: #fffaf0;
-  filter: drop-shadow(0 0 4px #fff)
-    drop-shadow(0 0 12px rgba(255, 215, 190, 0.95))
-    drop-shadow(0 0 28px rgba(255, 185, 150, 0.7));
-  animation: spin 0.9s linear infinite;
+  fill: #fffdf8;
+  filter: drop-shadow(0 0 3px #fff)
+    drop-shadow(0 0 10px rgba(255, 214, 232, 0.9));
+  animation: twinkle 0.7s ease-in-out infinite alternate;
 }
 
-.starTrail {
+/* flecks of stardust shed from the tail (created in JS) */
+.dust {
   position: absolute;
-  left: 50%;
-  bottom: 50%;
-  width: 14px;
-  height: 180px;
-  transform: translateX(-50%);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 220, 200, 0),
-    rgba(255, 235, 220, 0.45) 55%,
-    rgba(255, 255, 255, 0.95)
-  );
-  filter: blur(2px);
+  border-radius: 9999px;
+  pointer-events: none;
 }
 
-@keyframes spin {
+@keyframes pulse {
   to {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) scale(1.25);
+    opacity: 0.75;
+  }
+}
+
+@keyframes twinkle {
+  from {
+    transform: scale(0.85) rotate(-10deg);
+  }
+  to {
+    transform: scale(1.1) rotate(10deg);
   }
 }
 
 /*
  * ------------------------------------------------
- * IMPACT BURST
+ * LANDING
  * ------------------------------------------------
  */
 
@@ -78,36 +142,51 @@
   height: 0;
 }
 
-.burstFlash {
+/* moonlight swelling out from the portrait */
+.bloom {
   position: absolute;
   left: 0;
   top: 0;
-  width: 220px;
-  height: 220px;
+  width: 300px;
+  height: 300px;
   border-radius: 9999px;
   background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 225, 205, 0.6) 30%,
-    rgba(255, 200, 170, 0) 70%
+    closest-side,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 228, 240, 0.45) 35%,
+    rgba(222, 204, 255, 0.18) 65%,
+    transparent
   );
-  transform: translate(-50%, -50%) scale(0);
-  animation: flash 0.7s ease-out forwards;
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: bloom 1.3s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
 
+/* soft rings of light rippling outward */
 .burstRing {
   position: absolute;
   left: 0;
   top: 0;
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 9999px;
-  border: 2px solid rgba(255, 245, 235, 0.9);
-  box-shadow: 0 0 18px rgba(255, 220, 200, 0.8);
-  transform: translate(-50%, -50%) scale(0);
-  animation: ring 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  border: 1.5px solid rgba(255, 246, 236, 0.85);
+  box-shadow:
+    0 0 14px rgba(255, 220, 236, 0.7),
+    inset 0 0 14px rgba(255, 220, 236, 0.5);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+  animation: ring 1.4s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
 
+.ringLate {
+  border-color: rgba(227, 212, 255, 0.7);
+  box-shadow:
+    0 0 14px rgba(200, 180, 255, 0.6),
+    inset 0 0 14px rgba(200, 180, 255, 0.4);
+  animation-delay: 0.2s;
+}
+
+/* sparkles float out, then drift down while they fade */
 .burstStar {
   position: absolute;
   left: 0;
@@ -116,20 +195,18 @@
   height: var(--size);
   opacity: 0;
   transform: translate(-50%, -50%) scale(0);
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
-  animation: burst var(--dur) cubic-bezier(0.15, 0.85, 0.3, 1)
-    var(--delay) forwards;
+  filter: drop-shadow(0 0 4px currentColor);
+  animation: burst var(--dur) linear var(--delay) forwards;
 }
 
-@keyframes flash {
+@keyframes bloom {
   0% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(0.2);
   }
-
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.4);
+    transform: translate(-50%, -50%) scale(1.5);
   }
 }
 
@@ -138,10 +215,9 @@
     opacity: 1;
     transform: translate(-50%, -50%) scale(0.3);
   }
-
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(4);
+    transform: translate(-50%, -50%) scale(3.8);
   }
 }
 
@@ -149,19 +225,24 @@
   0% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.15, 0.85, 0.3, 1);
   }
-
-  60% {
+  40% {
     opacity: 1;
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1)
+      rotate(calc(var(--spin) * 0.5));
+    animation-timing-function: ease-in;
   }
-
+  70% {
+    opacity: 0.4;
+  }
+  80% {
+    opacity: 0.9;
+  }
   100% {
     opacity: 0;
-    transform: translate(
-        calc(-50% + var(--x)),
-        calc(-50% + var(--y))
-      )
-      scale(1) rotate(var(--spin));
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y) + var(--fall)))
+      scale(0.6) rotate(var(--spin));
   }
 }
 

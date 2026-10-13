@@ -46,7 +46,7 @@ export default function RootLayout({
         {/* soft ambient wash — adds depth behind everything */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-b from-[#f4ecff] via-[#fff6f9] to-[#ffeef2] dark:from-dark-bg dark:via-dark-bg dark:to-dark-surface" />
         {/* light mode: a pastel dawn sky with soft lilac stars */}
-        <div className="fixed inset-0 -z-10 dark:hidden">
+        <div className="site-sky-day fixed inset-0 -z-10 dark:hidden">
           <NightSky fullHeight tone="day" />
         </div>
         {/* dark mode: the whole site sits in a starry night sky */}

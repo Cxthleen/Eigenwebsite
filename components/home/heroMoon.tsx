@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import ShootingStar from './shootingStar'
 import HeroContent from './heroContent'
 import MoonPortrait from './moonPortrait'
-import HeroScene, { MoonAura, useMouseParallax } from './heroScene'
+import HeroScene, { MoonAura } from './heroScene'
+import { useMouseParallax, usePauseOffscreen } from '@/hooks/useSceneMotion'
 import NightSky from '@/components/nightSky'
 
 import Navbar from '@/components/layout/navbar'
@@ -20,6 +21,7 @@ export default function HeroMoon() {
   const moonRef = useRef<HTMLDivElement>(null)
 
   useMouseParallax(headerRef)
+  usePauseOffscreen(headerRef)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -36,6 +38,9 @@ export default function HeroMoon() {
       )
 
       setProgress(scrolled)
+
+      // the light hero paints its own sky over the site-wide one; pause the hidden one
+      document.documentElement.toggleAttribute('data-hero-covers', scrolled < 0.6)
     }
 
     handleScroll()
@@ -46,6 +51,7 @@ export default function HeroMoon() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      document.documentElement.removeAttribute('data-hero-covers')
     }
   }, [])
 
@@ -85,7 +91,7 @@ export default function HeroMoon() {
       >
         {/* in dark mode the site-wide night sky (layout.tsx) shows through instead */}
         <div
-          className="absolute inset-0 dark:hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent)]"
+          className="absolute inset-0 dark:hidden"
           style={{ opacity: 1 - skyFade * 0.7 }}
         >
           <NightSky />

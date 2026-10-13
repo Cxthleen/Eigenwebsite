@@ -40,7 +40,8 @@ export default function Stars({
       {stars.map((star, i) => (
         <span
           key={i}
-          className={`absolute rounded-full animate-twinkle ${color}`}
+          // only every third star twinkles: each animated star costs a layer, and a third is plenty
+          className={`absolute rounded-full ${i % 3 === 0 ? 'animate-twinkle' : 'opacity-60'} ${color}`}
           style={{
             top: star.top,
             left: star.left,

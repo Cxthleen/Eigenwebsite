@@ -15,43 +15,31 @@
 .depth {
   position: absolute;
   inset: 0;
-  transform: translate3d(
-    calc(var(--mx, 0) * var(--dx)),
-    calc(var(--my, 0) * var(--dy)),
-    0
-  );
-  will-change: transform;
+  /* useMouseParallax sets `translate` from data-depth */
+  will-change: translate;
 }
 
-.far { --dx: -5px; --dy: -3px; }
-.mid { --dx: -10px; --dy: -5px; }
-.near { --dx: -18px; --dy: -8px; }
+/* nothing animates while the section is scrolled away */
+.scene[data-paused] :is(.aurora, .glow, .puff, .mote, .bank) {
+  animation-play-state: paused;
+}
 
 /* one faint aurora ribbon */
 .aurora {
   position: absolute;
   width: 70%;
   height: 34%;
-  border-radius: 50%;
-  filter: blur(48px);
-  background: linear-gradient(
-    100deg,
-    transparent 5%,
-    rgba(212, 178, 255, 0.42) 35%,
-    rgba(255, 186, 214, 0.36) 65%,
-    transparent 95%
-  );
+  /* already-soft gradients instead of an (expensive) blur filter */
+  background:
+    radial-gradient(closest-side at 35% 50%, rgba(212, 178, 255, 0.38), transparent),
+    radial-gradient(closest-side at 65% 50%, rgba(255, 186, 214, 0.32), transparent);
   animation: aurora 26s ease-in-out infinite alternate;
 }
 
 :global(.dark) .aurora {
-  background: linear-gradient(
-    100deg,
-    transparent 5%,
-    rgba(160, 130, 255, 0.17) 35%,
-    rgba(168, 220, 200, 0.09) 65%,
-    transparent 95%
-  );
+  background:
+    radial-gradient(closest-side at 35% 50%, rgba(160, 130, 255, 0.16), transparent),
+    radial-gradient(closest-side at 65% 50%, rgba(168, 220, 200, 0.08), transparent);
 }
 
 @keyframes aurora {
@@ -90,13 +78,12 @@
   position: absolute;
   width: calc(220px * var(--scale));
   height: calc(88px * var(--scale));
-  background: linear-gradient(to bottom, rgba(214, 190, 245, 0.75), rgba(255, 200, 224, 0.45));
-  mask: var(--mask) center / 100% 100% no-repeat;
+  background: var(--day) center / 100% 100% no-repeat;
   animation: puff var(--dur) ease-in-out var(--delay) infinite alternate;
 }
 
 :global(.dark) .puff {
-  background: linear-gradient(to bottom, rgba(210, 195, 250, 0.26), rgba(120, 100, 180, 0.08));
+  background-image: var(--night);
 }
 
 @keyframes puff {
@@ -146,12 +133,11 @@
   }
 }
 
-/* faint cloud bank along the bottom */
+/* faint cloud bank along the bottom (pre-baked image, see skyArt) */
 .bankWrap {
   top: auto;
   height: clamp(90px, 16vh, 160px);
   opacity: 0.7;
-  mask-image: linear-gradient(to bottom, black 55%, transparent);
 }
 
 .bank {
@@ -161,22 +147,13 @@
   --h: clamp(90px, 16vh, 160px);
   width: calc(100% + 80px + var(--h) * 6);
   height: var(--h);
-  background: linear-gradient(to bottom, #ead3f1, #f7e6f1 60%);
-  mask: var(--mask) 0 0 / calc(var(--h) * 6) 100% repeat-x;
+  /* explicit tile size: the SVG has no fixed proportions, so `auto` would stretch it */
+  background: var(--day) 0 0 / calc(var(--h) * 6) 100% repeat-x;
   animation: bank 140s linear infinite;
 }
 
-.bank.rim {
-  bottom: 3px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 55%, transparent 70%);
-}
-
 :global(.dark) .bank {
-  background: linear-gradient(to bottom, #4c3f7c, #251d47 35%, #151129);
-}
-
-:global(.dark) .bank.rim {
-  background: linear-gradient(to bottom, rgba(222, 208, 240, 0.35) 55%, transparent 70%);
+  background-image: var(--night);
 }
 
 @keyframes bank {

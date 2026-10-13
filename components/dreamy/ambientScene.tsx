@@ -2,13 +2,8 @@
 
 import { useRef } from 'react'
 
-import {
-  cloudMask,
-  PUFF_MASK,
-  useMouseParallax,
-  type Bump,
-  type Vars,
-} from '@/components/home/heroScene'
+import { useMouseParallax, usePauseOffscreen } from '@/hooks/useSceneMotion'
+import { cloudImage, puffImage, type Vars } from './skyArt'
 
 import styles from './ambientScene.module.css'
 
@@ -68,10 +63,20 @@ const LAYOUTS: Layout[] = [
   },
 ]
 
-const BANK_MASK = cloudMask(
-  [[210, 50, 150], [170, 62, 140], [260, 75, 152], [190, 48, 144], [230, 66, 150], [200, 54, 140], [180, 58, 148]] as Bump[],
-  5,
-)
+const BANK_BUMPS: [number, number, number][] = [[210, 50, 150], [170, 62, 140], [260, 75, 152], [190, 48, 144], [230, 66, 150], [200, 54, 140], [180, 58, 148]]
+
+/* bank is ~144px tall on a typical screen: rim 3px up, fading from 55% down */
+const BANK_BASE = { blur: 5, rimOffset: (3 * 240) / 144, fadeFrom: 0.55 }
+
+const BANK = {
+  '--day': cloudImage(BANK_BUMPS, { ...BANK_BASE, fill: [[0, '#ead3f1'], [0.6, '#f7e6f1']], rim: ['#ffffff', 0.95] }),
+  '--night': cloudImage(BANK_BUMPS, { ...BANK_BASE, fill: [[0, '#4c3f7c'], [0.35, '#251d47'], [1, '#151129']], rim: ['#ded0f0', 0.35] }),
+} as Vars
+
+const PUFF = {
+  '--day': puffImage(['#d6bef5', 0.75], ['#ffc8e0', 0.45]),
+  '--night': puffImage(['#d2c3fa', 0.26], ['#7864b4', 0.08]),
+} as Vars
 
 type Props = {
   /* which arrangement to use (wraps around) */
@@ -83,12 +88,13 @@ type Props = {
 export default function AmbientScene({ variant = 0, cloudBank = false }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useMouseParallax(ref)
+  usePauseOffscreen(ref)
 
   const layout = LAYOUTS[variant % LAYOUTS.length]
 
   return (
     <div ref={ref} className={styles.scene} aria-hidden="true">
-      <div className={`${styles.depth} ${styles.far}`}>
+      <div className={styles.depth} data-depth="-5 -3">
         <div
           className={styles.aurora}
           style={
@@ -102,7 +108,7 @@ export default function AmbientScene({ variant = 0, cloudBank = false }: Props) 
         <div className={styles.glow} />
       </div>
 
-      <div className={`${styles.depth} ${styles.mid}`}>
+      <div className={styles.depth} data-depth="-10 -5">
         {layout.clouds.map((c, i) => (
           <div
             key={i}
@@ -111,7 +117,7 @@ export default function AmbientScene({ variant = 0, cloudBank = false }: Props) 
               {
                 top: c.top,
                 left: c.left,
-                '--mask': PUFF_MASK,
+                ...PUFF,
                 '--scale': String(c.scale),
                 '--dur': `${c.dur}s`,
                 '--delay': `${c.delay}s`,
@@ -121,7 +127,7 @@ export default function AmbientScene({ variant = 0, cloudBank = false }: Props) 
         ))}
       </div>
 
-      <div className={`${styles.depth} ${styles.near}`}>
+      <div className={styles.depth} data-depth="-18 -8">
         {layout.motes.map((m, i) => (
           <span
             key={i}
@@ -139,9 +145,8 @@ export default function AmbientScene({ variant = 0, cloudBank = false }: Props) 
       </div>
 
       {cloudBank && (
-        <div className={`${styles.depth} ${styles.near} ${styles.bankWrap}`}>
-          <div className={`${styles.bank} ${styles.rim}`} style={{ '--mask': BANK_MASK } as Vars} />
-          <div className={styles.bank} style={{ '--mask': BANK_MASK } as Vars} />
+        <div className={`${styles.depth} ${styles.bankWrap}`} data-depth="-18 -8">
+          <div className={styles.bank} style={BANK} />
         </div>
       )}
     </div>

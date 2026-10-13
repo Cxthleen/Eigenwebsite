@@ -1,64 +1,91 @@
-'use client'
-
-import { useEffect, type CSSProperties, type RefObject } from 'react'
+import { cloudImage, puffImage, type Bump, type Stop, type Vars } from '@/components/dreamy/skyArt'
 
 import styles from './heroScene.module.css'
 
 /*
  * The world around the hero: aurora ribbons, little drifting clouds,
  * a moonlit sea of clouds and motes of light rising out of it.
- * Layers shift with the mouse (--mx / --my, set by useMouseParallax)
- * and drift apart on scroll so the scene has depth.
+ * Layers marked data-depth drift with the mouse (useMouseParallax).
  * Positions are fixed (no randomness) so SSR matches.
  */
 
-export type Vars = CSSProperties & Record<`--${string}`, string>
-
-/* cloud tops as [width, bump height, valley y] in a 1440×240 tile */
-export type Bump = [number, number, number]
-
-export function cloudMask(bumps: Bump[], blur: number) {
-  const first = bumps[0][2]
-  let x = 0
-  let d = `M0 240 L0 ${first}`
-  bumps.forEach(([w, h], i) => {
-    // last bump lands back on the first valley so the tile repeats seamlessly
-    const nextY = i === bumps.length - 1 ? first : bumps[i + 1][2]
-    x += w
-    d += ` A${(w / 2) * 1.04} ${h} 0 0 1 ${x} ${nextY}`
-  })
-  d += ' L1440 240 Z'
-  // drawn three times side by side so the soft edge also wraps across the seam
-  const svg =
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 240' preserveAspectRatio='none'>` +
-    `<filter id='b' filterUnits='userSpaceOnUse' x='-1440' y='-240' width='4320' height='720'><feGaussianBlur stdDeviation='${blur}'/></filter>` +
-    `<g filter='url(#b)'><path d='${d}' transform='translate(-1440 0)'/><path d='${d}'/><path d='${d}' transform='translate(1440 0)'/></g></svg>`
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+type SeaLayer = {
+  key: string
+  depth: string
+  /* layer height as a share of the sea */
+  share: number
+  bumps: Bump[]
+  blur: number
+  fadeFrom: number
+  /* moonlit rim in dark mode — only on some layers so it isn't overwhelming */
+  nightRim?: number
+  day: Stop[]
+  night: Stop[]
 }
 
-const SEA = [
+/* each layer is baked into a day and a night image (see skyArt) */
+const SEA_LAYERS: SeaLayer[] = [
   {
     key: 'far',
+    depth: '-8 -3',
+    share: 1,
+    bumps: [[260, 70, 150], [320, 95, 140], [230, 55, 155], [330, 85, 135], [300, 75, 148]],
     blur: 7,
-    bumps: [[260, 70, 150], [320, 95, 140], [230, 55, 155], [330, 85, 135], [300, 75, 148]] as Bump[],
+    fadeFrom: 0.7,
+    nightRim: 0.55,
+    day: [[0, '#f9e6f1'], [0.6, '#e8cde3']],
+    night: [[0, '#8574bf'], [0.26, '#4c3e7a'], [0.75, '#2a2149']],
   },
   {
     key: 'mid',
+    depth: '-16 -5',
+    share: 0.74,
+    nightRim: 0.2,
+    bumps: [[210, 55, 130], [170, 65, 120], [260, 80, 135], [190, 50, 125], [230, 70, 130], [200, 58, 122], [180, 62, 128]],
     blur: 5,
-    bumps: [[210, 55, 130], [170, 65, 120], [260, 80, 135], [190, 50, 125], [230, 70, 130], [200, 58, 122], [180, 62, 128]] as Bump[],
+    fadeFrom: 0.7,
+    day: [[0, '#fff2f7'], [0.7, '#f6dfeb']],
+    night: [[0, '#6e5fa6'], [0.3, '#372b62'], [0.8, '#1e1838']],
   },
   {
     key: 'near',
+    depth: '-28 -8',
+    share: 0.5,
+    bumps: [[150, 45, 110], [120, 38, 104], [170, 52, 115], [140, 40, 106], [160, 48, 112], [130, 42, 104], [180, 55, 114], [145, 44, 108], [135, 40, 112], [110, 36, 106]],
     blur: 4,
-    bumps: [[150, 45, 110], [120, 38, 104], [170, 52, 115], [140, 40, 106], [160, 48, 112], [130, 42, 104], [180, 55, 114], [145, 44, 108], [135, 40, 112], [110, 36, 106]] as Bump[],
+    // the nearest layer melts into the section below
+    fadeFrom: 0.6,
+    day: [[0, '#fffafc'], [1, '#fff4f8']],
+    night: [[0, '#54468a'], [0.35, '#251d47'], [0.85, '#110e22']],
   },
-].map((layer) => ({ ...layer, mask: cloudMask(layer.bumps, layer.blur) }))
+]
 
-/* one fluffy cloud for the small clouds drifting in the sky */
-export const PUFF_MASK = `url("data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120'><filter id='b'><feGaussianBlur stdDeviation='3.5'/></filter>` +
-    `<path filter='url(#b)' d='M24 104 A28 28 0 0 1 64 76 A42 42 0 0 1 140 52 A36 36 0 0 1 206 62 A30 30 0 0 1 252 82 A22 22 0 0 1 276 104 Z'/></svg>`,
-)}")`
+/* the sea is ~225px tall on a typical screen; the rim sits 4px above each layer */
+const SEA_PX = 225
+/* the whole sea also fades out from 65% of its height down */
+const SEA_FADE_FROM = 0.65
+
+const SEA = SEA_LAYERS.map(({ bumps, blur, fadeFrom, share, nightRim, day, night, ...layer }) => {
+  const base = {
+    blur,
+    fadeFrom,
+    rimOffset: (4 * 240) / (SEA_PX * share),
+    // the sea-wide fade, measured from this layer's own top
+    stackFadeFrom: Math.max(0, (SEA_FADE_FROM - (1 - share)) / share),
+  }
+  return {
+    ...layer,
+    images: {
+      '--day': cloudImage(bumps, { ...base, fill: day, rim: ['#ffffff', 0.9] }),
+      '--night': cloudImage(bumps, { ...base, fill: night, rim: nightRim ? ['#ded0f0', nightRim] : undefined }),
+    } as Vars,
+  }
+})
+
+const PUFF = {
+  '--day': puffImage(['#fffafc', 0.95], ['#fadeee', 0.7]),
+  '--night': puffImage(['#d2c3fa', 0.42], ['#7864b4', 0.14]),
+} as Vars
 
 const SKY_CLOUDS = [
   { top: '44%', left: '3%', scale: 1, dur: 38, delay: -10 },
@@ -89,19 +116,19 @@ export default function HeroScene({ progress }: { progress: number }) {
       style={{ '--p': String(progress) } as Vars}
       aria-hidden="true"
     >
-      <div className={`${styles.depth} ${styles.d1}`}>
+      <div className={styles.depth} data-depth="-6 -4">
         <div className={`${styles.aurora} ${styles.auroraA}`} />
         <div className={`${styles.aurora} ${styles.auroraB}`} />
       </div>
 
-      <div className={`${styles.depth} ${styles.d2}`}>
+      <div className={styles.depth} data-depth="-14 -8">
         {SKY_CLOUDS.map((c, i) => (
           <div
             key={i}
             className={styles.puff}
             style={
               {
-                '--mask': PUFF_MASK,
+                ...PUFF,
                 top: c.top,
                 left: c.left,
                 '--scale': String(c.scale),
@@ -117,17 +144,13 @@ export default function HeroScene({ progress }: { progress: number }) {
         {/* moonlight pooling on the clouds right under the moon */}
         <div className={styles.seaGlow} />
 
-        <div className={styles.clouds}>
-          {SEA.map((layer) => (
-            <div key={layer.key} className={`${styles.depth} ${styles[layer.key]}`}>
-              {/* a lighter copy peeking out above = moonlit rim on the cloud tops */}
-              <div className={`${styles.cloudLayer} ${styles.rim}`} style={{ '--mask': layer.mask } as Vars} />
-              <div className={styles.cloudLayer} style={{ '--mask': layer.mask } as Vars} />
-            </div>
-          ))}
-        </div>
+        {SEA.map((layer) => (
+          <div key={layer.key} className={`${styles.depth} ${styles[layer.key]}`} data-depth={layer.depth}>
+            <div className={styles.cloudLayer} style={layer.images} />
+          </div>
+        ))}
 
-        <div className={`${styles.depth} ${styles.d3}`}>
+        <div className={styles.depth} data-depth="-30 -14">
           {MOTES.map((m, i) => (
             <span
               key={i}
@@ -150,61 +173,37 @@ export default function HeroScene({ progress }: { progress: number }) {
   )
 }
 
-/* Moonlight bloom, slow rays and two orbit rings framing the portrait. */
+/*
+ * Moonlight bloom, a soft corona and a faint moon halo ring, plus two
+ * orbit rings framing the portrait.
+ * Each sparkle orbits via two composited sine motions (x and y a quarter
+ * period apart), which traces an ellipse without repainting anything.
+ */
 export function MoonAura() {
   return (
-    <div className={styles.aura} aria-hidden="true">
+    <div className={styles.aura} data-depth="6 4" aria-hidden="true">
       <div className={styles.bloom} />
-      <div className={styles.rays} />
+      <div className={styles.corona} />
+      <div className={styles.halo} />
       <div className={`${styles.orbit} ${styles.orbitInner}`}>
-        <span className={styles.traveler} />
+        <span className={styles.orbitX}>
+          <span className={styles.orbitY}>
+            <span className={styles.traveler} />
+          </span>
+        </span>
       </div>
       <div className={`${styles.orbit} ${styles.orbitOuter}`}>
-        <span className={styles.traveler} />
-        <span className={`${styles.traveler} ${styles.travelerLate}`} />
+        <span className={styles.orbitX}>
+          <span className={styles.orbitY}>
+            <span className={styles.traveler} />
+          </span>
+        </span>
+        <span className={`${styles.orbitX} ${styles.late}`}>
+          <span className={styles.orbitY}>
+            <span className={`${styles.traveler} ${styles.small}`} />
+          </span>
+        </span>
       </div>
     </div>
   )
-}
-
-/*
- * Eases --mx / --my (−1…1) on the element toward the mouse,
- * so every layer underneath can drift by its own depth.
- */
-export function useMouseParallax(ref: RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    if (!window.matchMedia('(pointer: fine)').matches) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let tx = 0
-    let ty = 0
-    let x = 0
-    let y = 0
-    let frame = 0
-
-    const tick = () => {
-      x += (tx - x) * 0.06
-      y += (ty - y) * 0.06
-      el.style.setProperty('--mx', x.toFixed(4))
-      el.style.setProperty('--my', y.toFixed(4))
-      frame =
-        Math.abs(tx - x) > 0.001 || Math.abs(ty - y) > 0.001
-          ? requestAnimationFrame(tick)
-          : 0
-    }
-
-    const onMove = (e: PointerEvent) => {
-      tx = (e.clientX / window.innerWidth) * 2 - 1
-      ty = (e.clientY / window.innerHeight) * 2 - 1
-      if (!frame) frame = requestAnimationFrame(tick)
-    }
-
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('pointermove', onMove)
-    }
-  }, [ref])
 }
