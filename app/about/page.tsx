@@ -6,6 +6,7 @@ import GlowCard from '@/components/dreamy/glowCard'
 import dreamy from '@/components/dreamy/dreamy.module.css'
 
 import styles from './about.module.css'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 type TimelineItem = {
   date: string
@@ -43,6 +44,7 @@ const interests = ['Web development', 'Game development', 'Reading', 'Gaming']
 export default function About() {
   return (
     <main className="relative isolate min-h-screen w-full overflow-hidden text-ink">
+      <AmbientScene />
       {/* Navbar only on this page */}
       <div className="absolute left-0 top-4 z-40 w-full px-4">
         <Navbar />

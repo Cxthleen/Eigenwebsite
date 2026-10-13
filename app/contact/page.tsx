@@ -8,6 +8,7 @@ import FloatingDecor from '@/components/shared/floatingDecor'
 import dreamy from '@/components/dreamy/dreamy.module.css'
 import { usePointerGlow } from '@/hooks/usePointerGlow'
 import styles from './contact.module.css'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 type FormData = {
   name: string
@@ -66,6 +67,7 @@ export default function ContactPage() {
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden">
+      <AmbientScene cloudBank />
       <FloatingDecor className="left-[12%] top-[28%] text-2xl opacity-60">✧</FloatingDecor>
       <FloatingDecor className="right-[14%] top-[22%] text-xl opacity-60" delay="1.5s">
         ✦

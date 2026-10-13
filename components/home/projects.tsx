@@ -11,6 +11,7 @@ import SectionHeading from '@/components/dreamy/sectionHeading'
 import ScrollHint from '@/components/dreamy/scrollHint'
 import FloatingDecor from '@/components/shared/floatingDecor'
 import ScrollReveal from '@/components/shared/scrollReveal'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 export default function Projects() {
   const loopedProjects = [...projects, ...projects]
@@ -21,6 +22,7 @@ export default function Projects() {
       id="projects"
       className="snap-start relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-5 py-24 sm:px-8"
     >
+      <AmbientScene variant={1} />
       <FloatingDecor className="left-[9%] top-[20%] text-2xl opacity-60">✦</FloatingDecor>
       <FloatingDecor className="right-[12%] top-[28%] text-3xl opacity-50" delay="1.5s">
         ✧

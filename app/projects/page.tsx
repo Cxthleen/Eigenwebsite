@@ -6,10 +6,12 @@ import ScrollReveal from '@/components/shared/scrollReveal'
 import GlowCard from '@/components/dreamy/glowCard'
 import dreamy from '@/components/dreamy/dreamy.module.css'
 import { projects } from '@/lib/projects'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 export default function ProjectsPage() {
   return (
     <main className="relative isolate min-h-screen w-full overflow-hidden text-ink">
+      <AmbientScene variant={1} />
       {/* Navbar only on this page */}
       <div className="absolute left-0 top-4 z-40 w-full px-4">
         <Navbar />

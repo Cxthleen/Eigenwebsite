@@ -10,6 +10,7 @@ import { usePointerGlow } from '@/hooks/usePointerGlow'
 import { supabase } from '@/lib/supabase'
 
 import styles from './blog.module.css'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 type Entry = {
   id: string
@@ -399,6 +400,7 @@ export default function Blog() {
 
   return (
     <main className="relative isolate min-h-screen w-full overflow-hidden text-ink">
+      <AmbientScene variant={2} />
       {/* Navbar only on this page */}
       <div className="absolute left-0 top-4 z-40 w-full px-4">
         <Navbar />

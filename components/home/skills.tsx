@@ -9,6 +9,7 @@ import SectionHeading from '@/components/dreamy/sectionHeading'
 import ScrollHint from '@/components/dreamy/scrollHint'
 import FloatingDecor from '@/components/shared/floatingDecor'
 import ScrollReveal from '@/components/shared/scrollReveal'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 type Skill = {
   name: string
@@ -31,6 +32,7 @@ function SkillCard({ skill }: { skill: Skill }) {
   return (
     <li
       {...glow}
+      data-cursor="hover"
       className={`${dreamy.glass} ${dreamy.glow} ${dreamy.tilt} ${styles.card}`}
       style={{ '--tint': skill.tint } as CSSProperties}
     >
@@ -51,6 +53,7 @@ export default function Skills() {
       id="skills"
       className="snap-start relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-5 py-24 sm:px-8"
     >
+      <AmbientScene />
       <FloatingDecor className="left-[9%] top-[20%] text-2xl opacity-60">✦</FloatingDecor>
       <FloatingDecor className="right-[12%] top-[28%] text-3xl opacity-50" delay="1.5s">
         ✧

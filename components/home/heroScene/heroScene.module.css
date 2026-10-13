@@ -1,0 +1,462 @@
+/*
+ * Hero world: aurora, little clouds, a sea of clouds and rising motes,
+ * plus the moonlight aura around the portrait.
+ * Light = pastel dusk above the clouds, dark = moonlit night.
+ */
+
+.scene {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  --sea-h: clamp(130px, 25vh, 250px);
+}
+
+/*
+ * Each depth layer drifts with the mouse (--mx / --my) and
+ * scroll progress (--p) by its own amount.
+ */
+.depth {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--dx, 0px)),
+    calc(var(--my, 0) * var(--dy, 0px) + var(--p, 0) * var(--scroll, 0px)),
+    0
+  );
+  will-change: transform;
+}
+
+.d1 { --dx: -6px; --dy: -4px; --scroll: 40px; }
+.d2 { --dx: -14px; --dy: -8px; --scroll: 10px; }
+.d3 { --dx: -30px; --dy: -14px; --scroll: -140px; }
+/* farther clouds sink slower than the page; the nearest stays put so no gap opens below it */
+.far { --dx: -8px; --dy: -3px; --scroll: 70px; }
+.mid { --dx: -16px; --dy: -5px; --scroll: 35px; }
+.near { --dx: -28px; --dy: -8px; --scroll: 0px; }
+
+/*
+ * ------------------------------------------------
+ * AURORA
+ * ------------------------------------------------
+ */
+
+.aurora {
+  position: absolute;
+  width: 70%;
+  height: 36%;
+  border-radius: 50%;
+  filter: blur(42px);
+  opacity: calc(1 - var(--p, 0));
+  animation: aurora 22s ease-in-out infinite alternate;
+}
+
+.auroraA {
+  top: 4%;
+  left: -14%;
+  --tilt: -10deg;
+  background: linear-gradient(
+    100deg,
+    transparent 5%,
+    rgba(255, 186, 214, 0.38) 35%,
+    rgba(222, 190, 255, 0.32) 65%,
+    transparent 95%
+  );
+}
+
+.auroraB {
+  top: 12%;
+  right: -16%;
+  --tilt: 12deg;
+  background: linear-gradient(
+    80deg,
+    transparent 5%,
+    rgba(255, 214, 184, 0.3) 35%,
+    rgba(255, 186, 214, 0.3) 65%,
+    transparent 95%
+  );
+  animation-duration: 28s;
+  animation-direction: alternate-reverse;
+}
+
+:global(.dark) .auroraA {
+  background: linear-gradient(
+    100deg,
+    transparent 5%,
+    rgba(160, 130, 255, 0.24) 35%,
+    rgba(168, 220, 200, 0.12) 65%,
+    transparent 95%
+  );
+}
+
+:global(.dark) .auroraB {
+  background: linear-gradient(
+    80deg,
+    transparent 5%,
+    rgba(255, 170, 210, 0.14) 35%,
+    rgba(160, 130, 255, 0.2) 65%,
+    transparent 95%
+  );
+}
+
+@keyframes aurora {
+  from {
+    transform: rotate(var(--tilt)) translateX(-3%) scaleY(0.85);
+  }
+  to {
+    transform: rotate(calc(var(--tilt) * -0.4)) translateX(4%) scaleY(1.15);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * LITTLE CLOUDS
+ * ------------------------------------------------
+ */
+
+.puff {
+  position: absolute;
+  width: calc(220px * var(--scale));
+  height: calc(88px * var(--scale));
+  background: linear-gradient(to bottom, rgba(255, 250, 252, 0.95), rgba(250, 222, 238, 0.7));
+  mask: var(--mask) center / 100% 100% no-repeat;
+  opacity: 0.85;
+  animation: puff var(--dur) ease-in-out var(--delay) infinite alternate;
+}
+
+:global(.dark) .puff {
+  background: linear-gradient(to bottom, rgba(210, 195, 250, 0.42), rgba(120, 100, 180, 0.14));
+}
+
+@keyframes puff {
+  from {
+    transform: translate(-30px, 0);
+  }
+  to {
+    transform: translate(50px, -8px);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * SEA OF CLOUDS
+ * ------------------------------------------------
+ */
+
+.sea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--sea-h);
+}
+
+/* layers sink on scroll; this keeps the hero's bottom edge soft regardless */
+.clouds {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(to bottom, black 65%, transparent);
+}
+
+.far { --h: var(--sea-h); }
+.mid { --h: calc(var(--sea-h) * 0.74); }
+.near { --h: calc(var(--sea-h) * 0.5); }
+
+.cloudLayer {
+  position: absolute;
+  bottom: 0;
+  /* spare room for the parallax shift and one tile of drift */
+  left: -40px;
+  width: calc(100% + 80px + var(--h) * 6);
+  height: var(--h);
+  background: var(--fill);
+  /* every layer fades out at the bottom so the hero melts into the next section */
+  mask-image: var(--mask), linear-gradient(to bottom, black var(--fade-from, 70%), transparent);
+  mask-size: calc(var(--h) * 6) 100%, 100% 100%;
+  mask-repeat: repeat-x, no-repeat;
+  mask-composite: intersect;
+  animation: sea var(--drift) linear infinite;
+}
+
+@keyframes sea {
+  to {
+    transform: translateX(calc(var(--h) * -6));
+  }
+}
+
+.far .cloudLayer {
+  --drift: 160s;
+  --fill: linear-gradient(to bottom, #f9e6f1, #e8cde3 60%);
+  animation-direction: reverse;
+}
+
+.mid .cloudLayer {
+  --drift: 110s;
+  --fill: linear-gradient(to bottom, #fff2f7, #f6dfeb 70%);
+}
+
+/* the nearest layer melts into the section below */
+.near .cloudLayer {
+  --drift: 80s;
+  --fill: linear-gradient(to bottom, #fffafc, #fff4f8);
+  --fade-from: 60%;
+}
+
+:global(.dark) .far .cloudLayer {
+  --fill: linear-gradient(to bottom, #8574bf, #4c3e7a 26%, #2a2149 75%);
+}
+
+:global(.dark) .mid .cloudLayer {
+  --fill: linear-gradient(to bottom, #6e5fa6, #372b62 30%, #1e1838 80%);
+}
+
+:global(.dark) .near .cloudLayer {
+  --fill: linear-gradient(to bottom, #54468a, #251d47 35%, #110e22 85%);
+}
+
+.cloudLayer.rim {
+  bottom: 4px;
+  /* gone before the layers below start fading, so it never shows through */
+  --fill: linear-gradient(to bottom, var(--rim) 55%, transparent 70%);
+  --rim: rgba(255, 255, 255, 0.9);
+}
+
+:global(.dark) .cloudLayer.rim {
+  --rim: rgba(222, 208, 240, 0.55);
+}
+
+/* moonlight pooling on the clouds under the moon */
+.seaGlow {
+  position: absolute;
+  left: 50%;
+  top: -12%;
+  width: min(900px, 95%);
+  height: 70%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255, 252, 248, 0.75), transparent 65%);
+  filter: blur(18px);
+  animation: breathe 7s ease-in-out infinite;
+}
+
+:global(.dark) .seaGlow {
+  background: radial-gradient(ellipse at center, rgba(222, 208, 240, 0.4), transparent 65%);
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.65;
+  }
+}
+
+/* motes of light floating up out of the clouds */
+.mote {
+  position: absolute;
+  bottom: 25%;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 6px 2px rgba(255, 182, 210, 0.8);
+  opacity: 0;
+  animation: rise var(--dur) ease-in-out var(--delay) infinite;
+}
+
+:global(.dark) .mote {
+  background: #fff3d6;
+  box-shadow: 0 0 8px 2px rgba(255, 226, 170, 0.7);
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(var(--sway), -30vh);
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -60vh);
+  }
+}
+
+/*
+ * ------------------------------------------------
+ * MOON AURA
+ * ------------------------------------------------
+ */
+
+.aura {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  pointer-events: none;
+  transform: translate(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 4px));
+}
+
+.bloom,
+.rays,
+.orbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.bloom {
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 236, 226, 0.4) 0%,
+    rgba(255, 214, 230, 0.16) 35%,
+    transparent 68%
+  );
+}
+
+:global(.dark) .bloom {
+  background: radial-gradient(
+    circle,
+    rgba(222, 208, 240, 0.22) 0%,
+    rgba(180, 150, 240, 0.08) 40%,
+    transparent 68%
+  );
+}
+
+.rays {
+  width: 600px;
+  height: 600px;
+  background: repeating-conic-gradient(
+    rgba(255, 246, 232, 0.14) 0deg 3deg,
+    transparent 3deg 16deg
+  );
+  mask-image: radial-gradient(circle, transparent 20%, black 32%, transparent 68%);
+  filter: blur(3px);
+  animation: spin 160s linear infinite;
+}
+
+:global(.dark) .rays {
+  background: repeating-conic-gradient(
+    rgba(222, 208, 240, 0.08) 0deg 3deg,
+    transparent 3deg 16deg
+  );
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.orbit {
+  border: 1px solid rgba(255, 240, 235, 0.32);
+  transform: translate(-50%, -50%) rotate(-12deg);
+}
+
+:global(.dark) .orbit {
+  border-color: rgba(222, 208, 240, 0.18);
+}
+
+.orbitInner {
+  width: 400px;
+  height: 110px;
+  --path: path('M0 55 A200 55 0 1 1 400 55 A200 55 0 1 1 0 55');
+  --orbit-dur: 26s;
+}
+
+.orbitOuter {
+  width: 600px;
+  height: 170px;
+  border-style: dashed;
+  border-color: rgba(255, 240, 235, 0.2);
+  --path: path('M0 85 A300 85 0 1 1 600 85 A300 85 0 1 1 0 85');
+  --orbit-dur: 40s;
+}
+
+:global(.dark) .orbitOuter {
+  border-color: rgba(222, 208, 240, 0.12);
+}
+
+.traveler {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow:
+    0 0 6px 2px rgba(255, 220, 235, 0.9),
+    0 0 16px 4px rgba(222, 190, 255, 0.5);
+  offset-path: var(--path);
+  offset-rotate: 0deg;
+  animation: orbit var(--orbit-dur) linear infinite;
+}
+
+.travelerLate {
+  width: 4px;
+  height: 4px;
+  animation-delay: calc(var(--orbit-dur) * -0.5);
+}
+
+@keyframes orbit {
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  /* the text fills a phone screen, so no room for little clouds */
+  .puff {
+    display: none;
+  }
+
+  .bloom {
+    width: 440px;
+    height: 440px;
+  }
+
+  .rays {
+    width: 420px;
+    height: 420px;
+  }
+
+  .orbitInner {
+    width: 260px;
+    height: 76px;
+    --path: path('M0 38 A130 38 0 1 1 260 38 A130 38 0 1 1 0 38');
+  }
+
+  .orbitOuter {
+    width: 360px;
+    height: 104px;
+    --path: path('M0 52 A180 52 0 1 1 360 52 A180 52 0 1 1 0 52');
+  }
+}
+
+@media (max-height: 760px) {
+  .scene {
+    --sea-h: clamp(110px, 22vh, 180px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora,
+  .puff,
+  .cloudLayer,
+  .seaGlow,
+  .rays,
+  .traveler {
+    animation: none;
+  }
+
+  .mote {
+    display: none;
+  }
+}

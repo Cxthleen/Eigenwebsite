@@ -2,10 +2,12 @@ import Link from 'next/link'
 import FloatingDecor from '@/components/shared/floatingDecor'
 import GlowCard from '@/components/dreamy/glowCard'
 import dreamy from '@/components/dreamy/dreamy.module.css'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 export default function NotFound() {
   return (
     <main className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
+      <AmbientScene variant={1} cloudBank />
       <FloatingDecor className="left-[12%] top-[20%] text-3xl opacity-70">✦</FloatingDecor>
       <FloatingDecor className="right-[15%] top-[30%] text-2xl opacity-70" delay="1s">✧</FloatingDecor>
       <FloatingDecor className="bottom-[22%] left-[20%] text-xl opacity-60" delay="2s">⋆</FloatingDecor>

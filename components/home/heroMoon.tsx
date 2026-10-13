@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import ShootingStar from './shootingStar'
 import HeroContent from './heroContent'
 import MoonPortrait from './moonPortrait'
+import HeroScene, { MoonAura, useMouseParallax } from './heroScene'
 import NightSky from '@/components/nightSky'
 
 import Navbar from '@/components/layout/navbar'
@@ -17,6 +18,8 @@ export default function HeroMoon() {
 
   const headerRef = useRef<HTMLDivElement>(null)
   const moonRef = useRef<HTMLDivElement>(null)
+
+  useMouseParallax(headerRef)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -88,6 +91,8 @@ export default function HeroMoon() {
           <NightSky />
         </div>
 
+        <HeroScene progress={progress} />
+
         {/* Profile / portrait */}
         <div
           ref={moonRef}
@@ -96,6 +101,7 @@ export default function HeroMoon() {
             transform: `translateY(${moonTranslateY}px) scale(${moonScale})`,
           }}
         >
+          <MoonAura />
           <MoonPortrait src="/images/avatar.jpeg" alt="Cathleen" />
         </div>
 

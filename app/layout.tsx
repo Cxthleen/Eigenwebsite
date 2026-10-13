@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Footer from '@/components/layout/footer'
 import NightSky from '@/components/nightSky'
+import StarCursor from '@/components/starCursor'
 import { Noto_Sans, Playfair_Display } from "next/font/google";
 import { cn } from "@/lib/utils";
 import StyledJsxRegistry from './registry'
@@ -56,6 +57,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </StyledJsxRegistry>
+        <StarCursor />
       </body>
     </html>
   )

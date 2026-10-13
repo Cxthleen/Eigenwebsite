@@ -8,6 +8,7 @@ import { usePointerGlow } from '@/hooks/usePointerGlow'
 import SectionHeading from '@/components/dreamy/sectionHeading'
 import FloatingDecor from '@/components/shared/floatingDecor'
 import ScrollReveal from '@/components/shared/scrollReveal'
+import AmbientScene from '@/components/dreamy/ambientScene'
 
 type ContactLink = {
   label: string
@@ -55,6 +56,7 @@ export default function Contact() {
       id="contact"
       className="snap-start relative isolate flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24"
     >
+      <AmbientScene variant={2} cloudBank />
       <FloatingDecor className="left-[12%] top-[18%] text-4xl opacity-60">☾</FloatingDecor>
       <FloatingDecor className="right-[15%] top-[24%] text-2xl opacity-60" delay="1s">
         ✦

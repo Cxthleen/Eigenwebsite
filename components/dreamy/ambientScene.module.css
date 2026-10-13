@@ -1,0 +1,205 @@
+/*
+ * Subtle version of the hero scene (components/home/heroScene)
+ * for the other sections and pages. Everything is fainter, smaller
+ * and slower so it stays behind the content.
+ */
+
+.scene {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.depth {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--dx)),
+    calc(var(--my, 0) * var(--dy)),
+    0
+  );
+  will-change: transform;
+}
+
+.far { --dx: -5px; --dy: -3px; }
+.mid { --dx: -10px; --dy: -5px; }
+.near { --dx: -18px; --dy: -8px; }
+
+/* one faint aurora ribbon */
+.aurora {
+  position: absolute;
+  width: 70%;
+  height: 34%;
+  border-radius: 50%;
+  filter: blur(48px);
+  background: linear-gradient(
+    100deg,
+    transparent 5%,
+    rgba(212, 178, 255, 0.42) 35%,
+    rgba(255, 186, 214, 0.36) 65%,
+    transparent 95%
+  );
+  animation: aurora 26s ease-in-out infinite alternate;
+}
+
+:global(.dark) .aurora {
+  background: linear-gradient(
+    100deg,
+    transparent 5%,
+    rgba(160, 130, 255, 0.17) 35%,
+    rgba(168, 220, 200, 0.09) 65%,
+    transparent 95%
+  );
+}
+
+@keyframes aurora {
+  from {
+    transform: rotate(var(--tilt)) translateX(-3%) scaleY(0.85);
+  }
+  to {
+    transform: rotate(calc(var(--tilt) * -0.4)) translateX(4%) scaleY(1.15);
+  }
+}
+
+/* soft moonlight behind the main content */
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(1000px, 120%);
+  height: 80%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5), transparent 62%);
+  animation: breathe 9s ease-in-out infinite;
+}
+
+:global(.dark) .glow {
+  background: radial-gradient(ellipse at center, rgba(180, 150, 240, 0.09), transparent 62%);
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* little clouds */
+.puff {
+  position: absolute;
+  width: calc(220px * var(--scale));
+  height: calc(88px * var(--scale));
+  background: linear-gradient(to bottom, rgba(214, 190, 245, 0.75), rgba(255, 200, 224, 0.45));
+  mask: var(--mask) center / 100% 100% no-repeat;
+  animation: puff var(--dur) ease-in-out var(--delay) infinite alternate;
+}
+
+:global(.dark) .puff {
+  background: linear-gradient(to bottom, rgba(210, 195, 250, 0.26), rgba(120, 100, 180, 0.08));
+}
+
+@keyframes puff {
+  from {
+    transform: translate(-24px, 0);
+  }
+  to {
+    transform: translate(40px, -6px);
+  }
+}
+
+/* motes drifting up through the section */
+.mote {
+  position: absolute;
+  bottom: -2%;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 6px 2px rgba(201, 168, 240, 0.7);
+  opacity: 0;
+  animation: rise var(--dur) ease-in-out var(--delay) infinite;
+}
+
+:global(.dark) .mote {
+  background: #fff3d6;
+  box-shadow: 0 0 7px 2px rgba(255, 226, 170, 0.55);
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(var(--sway), -45vh);
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -90vh);
+  }
+}
+
+/* faint cloud bank along the bottom */
+.bankWrap {
+  top: auto;
+  height: clamp(90px, 16vh, 160px);
+  opacity: 0.7;
+  mask-image: linear-gradient(to bottom, black 55%, transparent);
+}
+
+.bank {
+  position: absolute;
+  bottom: 0;
+  left: -40px;
+  --h: clamp(90px, 16vh, 160px);
+  width: calc(100% + 80px + var(--h) * 6);
+  height: var(--h);
+  background: linear-gradient(to bottom, #ead3f1, #f7e6f1 60%);
+  mask: var(--mask) 0 0 / calc(var(--h) * 6) 100% repeat-x;
+  animation: bank 140s linear infinite;
+}
+
+.bank.rim {
+  bottom: 3px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 55%, transparent 70%);
+}
+
+:global(.dark) .bank {
+  background: linear-gradient(to bottom, #4c3f7c, #251d47 35%, #151129);
+}
+
+:global(.dark) .bank.rim {
+  background: linear-gradient(to bottom, rgba(222, 208, 240, 0.35) 55%, transparent 70%);
+}
+
+@keyframes bank {
+  to {
+    transform: translateX(calc(var(--h) * -6));
+  }
+}
+
+@media (max-width: 640px) {
+  .puff {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora,
+  .glow,
+  .puff,
+  .bank {
+    animation: none;
+  }
+
+  .mote {
+    display: none;
+  }
+}
