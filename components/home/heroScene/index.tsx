@@ -174,8 +174,8 @@ export default function HeroScene({ progress }: { progress: number }) {
 }
 
 /*
- * Moonlight bloom, a soft corona and a faint moon halo ring, plus two
- * orbit rings framing the portrait.
+ * Moonlight bloom and a soft misty corona, plus two orbit rings
+ * framing the portrait.
  * Each sparkle orbits via two composited sine motions (x and y a quarter
  * period apart), which traces an ellipse without repainting anything.
  */
@@ -184,7 +184,6 @@ export function MoonAura() {
     <div className={styles.aura} data-depth="6 4" aria-hidden="true">
       <div className={styles.bloom} />
       <div className={styles.corona} />
-      <div className={styles.halo} />
       <div className={`${styles.orbit} ${styles.orbitInner}`}>
         <span className={styles.orbitX}>
           <span className={styles.orbitY}>

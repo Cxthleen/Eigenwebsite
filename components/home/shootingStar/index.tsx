@@ -108,8 +108,8 @@ export default function ShootingStar({ targetRef, onLand }: Props) {
     // used by the burst
     overlay.style.setProperty('--impact-y', `${impactY}px`)
 
-    // glide in diagonally from the top right, like a real shooting star
-    const startX = Math.min(overlayRect.width * 0.42, 520)
+    // fall straight down the middle onto the moon
+    const startX = 0
     const startY = -60
     const endY = impactY - 6
     const angle = Math.atan2(endY - startY, -startX)

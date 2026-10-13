@@ -20,7 +20,7 @@
 }
 
 /* nothing animates while the hero is scrolled away */
-:global([data-paused]) :is(.aurora, .puff, .cloudLayer, .seaGlow, .mote, .halo, .orbitX, .orbitY) {
+:global([data-paused]) :is(.aurora, .puff, .cloudLayer, .seaGlow, .mote, .corona, .orbitX, .orbitY) {
   animation-play-state: paused;
 }
 
@@ -238,7 +238,6 @@
 
 .bloom,
 .corona,
-.halo,
 .orbit {
   position: absolute;
   left: 0;
@@ -252,73 +251,52 @@
   height: 640px;
   background: radial-gradient(
     circle,
-    rgba(255, 236, 226, 0.4) 0%,
-    rgba(255, 214, 230, 0.16) 35%,
-    transparent 68%
+    rgba(255, 236, 226, 0.26) 0%,
+    rgba(255, 214, 230, 0.12) 30%,
+    rgba(255, 214, 230, 0.04) 50%,
+    transparent 70%
   );
 }
 
 :global(.dark) .bloom {
   background: radial-gradient(
     circle,
-    rgba(222, 208, 240, 0.22) 0%,
-    rgba(180, 150, 240, 0.08) 40%,
-    transparent 68%
+    rgba(222, 208, 240, 0.16) 0%,
+    rgba(180, 150, 240, 0.07) 30%,
+    rgba(180, 150, 240, 0.025) 50%,
+    transparent 70%
   );
 }
 
-/* soft moonlight spreading out from the moon */
+/*
+ * Misty moonlight: a few soft, slightly off-centre glows that overlap
+ * and fade out very gradually, slowly turning, so it never reads as a
+ * hard circle.
+ */
 .corona {
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(
-    closest-side,
-    rgba(255, 248, 236, 0.5) 30%,
-    rgba(255, 236, 226, 0.22) 50%,
-    rgba(255, 220, 235, 0.08) 75%,
-    transparent
-  );
+  width: 560px;
+  height: 560px;
+  --glow: 255, 244, 232;
+  --tint: 255, 214, 232;
+  --mist: 222, 204, 255;
+  background:
+    radial-gradient(ellipse 34% 28% at 47% 52%, rgba(var(--glow), 0.32), rgba(var(--glow), 0.12) 45%, transparent),
+    radial-gradient(ellipse 30% 38% at 54% 46%, rgba(var(--tint), 0.18), rgba(var(--tint), 0.06) 50%, transparent),
+    radial-gradient(ellipse 44% 34% at 50% 55%, rgba(var(--mist), 0.12), rgba(var(--mist), 0.04) 55%, transparent),
+    radial-gradient(ellipse 40% 46% at 45% 47%, rgba(var(--glow), 0.08), transparent);
+  animation: corona 90s linear infinite;
 }
 
 :global(.dark) .corona {
-  background: radial-gradient(
-    closest-side,
-    rgba(255, 246, 232, 0.28) 30%,
-    rgba(222, 208, 240, 0.12) 50%,
-    rgba(200, 180, 245, 0.04) 75%,
-    transparent
-  );
+  --glow: 255, 246, 232;
+  --tint: 230, 210, 255;
+  --mist: 190, 170, 245;
+  opacity: 0.7;
 }
 
-/* a faint moon halo: a ring of light, lilac inside and warm outside */
-.halo {
-  width: 470px;
-  height: 470px;
-  background: radial-gradient(
-    closest-side,
-    transparent 72%,
-    rgba(214, 196, 255, 0.16) 80%,
-    rgba(255, 238, 228, 0.24) 86%,
-    rgba(255, 214, 196, 0.1) 92%,
-    transparent
-  );
-  animation: halo 8s ease-in-out infinite;
-}
-
-:global(.dark) .halo {
-  background: radial-gradient(
-    closest-side,
-    transparent 72%,
-    rgba(196, 176, 255, 0.1) 80%,
-    rgba(255, 246, 232, 0.14) 86%,
-    rgba(255, 214, 196, 0.05) 92%,
-    transparent
-  );
-}
-
-@keyframes halo {
-  50% {
-    opacity: 0.6;
+@keyframes corona {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
@@ -424,13 +402,8 @@
   }
 
   .corona {
-    width: 320px;
-    height: 320px;
-  }
-
-  .halo {
-    width: 340px;
-    height: 340px;
+    width: 400px;
+    height: 400px;
   }
 
   .orbitInner {
@@ -455,7 +428,7 @@
   .puff,
   .cloudLayer,
   .seaGlow,
-  .halo,
+  .corona,
   .orbitX,
   .orbitY {
     animation: none;

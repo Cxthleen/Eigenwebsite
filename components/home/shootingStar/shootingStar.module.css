@@ -1,6 +1,6 @@
 /*
- * Intro animation for the hero: a shooting star glides in
- * diagonally, shedding stardust, and lands on the portrait
+ * Intro animation for the hero: a shooting star falls down
+ * the middle, shedding stardust, and lands on the portrait
  * in a soft bloom of moonlight and floating sparkles.
  *
  * --impact-y is set from JS on the .overlay element,
