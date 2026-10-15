@@ -21,7 +21,7 @@
   width: 100%;
   max-width: 56rem;
   margin: 0 auto;
-  padding: 0.55rem 0.6rem 0.55rem 1.25rem;
+  padding: 0.45rem 0.6rem 0.45rem 0.9rem;
   border-radius: 9999px;
   border: 1px solid transparent;
   backdrop-filter: blur(18px);
@@ -131,47 +131,119 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 1.125rem;
+  gap: 0.6rem;
   font-weight: 700;
 }
 
-.logoMoon {
-  display: inline-block;
-  color: #ffe8b8;
-  text-shadow: 0 0 10px rgba(255, 232, 184, 0.9);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+.logoWords {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.logo:hover .logoMoon {
-  transform: rotate(-20deg) scale(1.15);
+.logoName {
+  position: relative;
+  align-self: flex-start;
+  font-size: 1.125rem;
+  line-height: 1;
 }
 
-[data-sky='false'] .logoMoon {
-  color: #b38be0;
-  text-shadow: none;
+.logoTagline {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  color: rgba(255, 243, 176, 0.75);
 }
 
+[data-sky='false'] .logoTagline {
+  color: #8a5aa8;
+}
+
+:global(.dark) [data-sky='false'] .logoTagline {
+  color: var(--color-dark-ink-soft);
+}
+
+@media (max-width: 379px) {
+  .logoTagline {
+    display: none;
+  }
+}
+
+/* the name has a slow shimmer of light drifting through it */
 .logoText {
-  background: linear-gradient(100deg, #fff8f0, #ffd6e6 45%, #e2d0ff 75%, #fff8f0);
-  background-size: 200% auto;
+  background: linear-gradient(
+    100deg,
+    #fff8f0 0%,
+    #ffd6e6 20%,
+    #e2d0ff 35%,
+    #fffbe0 45%,
+    #e2d0ff 55%,
+    #ffd6e6 70%,
+    #fff8f0 100%
+  );
+  background-size: 250% auto;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  transition: background-position 0.8s ease;
+  filter: drop-shadow(0 0 6px rgba(226, 208, 255, 0.35));
+  animation: logo-shimmer 6s ease-in-out infinite alternate;
 }
 
-.logo:hover .logoText {
-  background-position: 100% center;
+/* little stars orbiting the name (nth-child: they sit after the name text); they just twinkle in place */
+.logoSparkle {
+  position: absolute;
+  pointer-events: none;
+  color: #fff3b0;
+  font-size: 0.5rem;
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(255, 243, 176, 0.9);
+  animation: logo-twinkle 2.8s ease-in-out infinite;
+}
+
+.logoSparkle:nth-child(2) {
+  top: -0.3rem;
+  right: -0.55rem;
+}
+
+.logoSparkle:nth-child(3) {
+  top: -0.35rem;
+  left: -0.4rem;
+  color: #f8d9ff;
+  font-size: 0.45rem;
+  animation-delay: 0.9s;
+}
+
+.logoSparkle:nth-child(4) {
+  top: -0.45rem;
+  left: 55%;
+  font-size: 0.4rem;
+  animation-delay: 1.8s;
+}
+
+[data-sky='false'] .logoSparkle {
+  color: #c9a8f0;
+  text-shadow: none;
+}
+
+:global(.dark) [data-sky='false'] .logoSparkle {
+  color: #fff3b0;
+  text-shadow: 0 0 6px rgba(255, 243, 176, 0.9);
 }
 
 [data-sky='false'] .logoText {
-  background-image: linear-gradient(100deg, #3a2d4f, #8a5aa8 50%, #e56b87);
-}
-
-:global(.dark) [data-sky='false'] .logoMoon {
-  color: #ffe8b8;
-  text-shadow: 0 0 10px rgba(255, 232, 184, 0.9);
+  background-image: linear-gradient(
+    100deg,
+    #3a2d4f 0%,
+    #8a5aa8 25%,
+    #e56b87 40%,
+    #c9a8f0 50%,
+    #e56b87 60%,
+    #8a5aa8 75%,
+    #3a2d4f 100%
+  );
+  filter: none;
 }
 
 :global(.dark) [data-sky='false'] .twinkle {
@@ -180,7 +252,17 @@
 }
 
 :global(.dark) [data-sky='false'] .logoText {
-  background-image: linear-gradient(100deg, #fff8f0, #ffd6e6 45%, #e2d0ff 75%, #fff8f0);
+  background-image: linear-gradient(
+    100deg,
+    #fff8f0 0%,
+    #ffd6e6 20%,
+    #e2d0ff 35%,
+    #fffbe0 45%,
+    #e2d0ff 55%,
+    #ffd6e6 70%,
+    #fff8f0 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(226, 208, 255, 0.35));
 }
 
 /*
@@ -431,6 +513,29 @@
   }
 }
 
+@keyframes logo-shimmer {
+  from {
+    background-position: 0% center;
+  }
+
+  to {
+    background-position: 100% center;
+  }
+}
+
+@keyframes logo-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.6) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(45deg);
+  }
+}
+
 @keyframes menu-in {
   from {
     opacity: 0;
@@ -440,7 +545,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .twinkle,
-  .menu {
+  .menu,
+  .logoText,
+  .logoSparkle {
     animation: none;
   }
 }

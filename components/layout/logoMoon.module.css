@@ -1,0 +1,130 @@
+/*
+ * Little moon next to the name that slowly goes through its phases,
+ * with a cloud drifting past and stars twinkling around it. Colours
+ * follow the navbar's [data-sky] / .dark looks via the custom properties.
+ */
+
+.sky {
+  --moon-lit: #ffe8b8;
+  --moon-shadow: #3d2f5e;
+  --moon-rim: rgba(255, 232, 184, 0.45);
+  --moon-halo: rgba(255, 232, 184, 0.2);
+  --moon-star: #fff3b0;
+  --moon-cloud: rgba(248, 236, 255, 0.85);
+
+  flex-shrink: 0;
+  width: 3rem;
+  height: 2.36rem;
+  overflow: visible;
+}
+
+[data-sky='false'] .sky {
+  --moon-lit: #c9a8f0;
+  --moon-shadow: #f1e8fb;
+  --moon-rim: rgba(179, 139, 224, 0.55);
+  --moon-halo: rgba(222, 208, 240, 0.45);
+  --moon-star: #b38be0;
+  --moon-cloud: rgba(255, 255, 255, 0.95);
+}
+
+:global(.dark) [data-sky='false'] .sky {
+  --moon-lit: #ffe8b8;
+  --moon-shadow: #2e2550;
+  --moon-rim: rgba(255, 232, 184, 0.4);
+  --moon-halo: rgba(200, 170, 255, 0.16);
+  --moon-star: #fff3b0;
+  --moon-cloud: rgba(222, 208, 240, 0.75);
+}
+
+.halo {
+  fill: var(--moon-halo);
+}
+
+.lit {
+  fill: var(--moon-lit);
+}
+
+.rim {
+  fill: none;
+  stroke: var(--moon-rim);
+  stroke-width: 0.8;
+}
+
+.shadow {
+  fill: var(--moon-shadow);
+  animation: moon-phases 20s linear infinite;
+}
+
+.star {
+  fill: var(--moon-star);
+  animation: moon-twinkle 3.2s ease-in-out infinite;
+}
+
+.cloud {
+  fill: var(--moon-cloud);
+  animation: cloud-drift 14s ease-in-out infinite;
+}
+
+/*
+ * The shadow slides off to the left (waxing, lit side on the right) until the
+ * moon is full, then hops — unseen, it's off the disc — to the right side and
+ * slides back in (waning) to new moon again.
+ */
+@keyframes moon-phases {
+  0%,
+  6% {
+    transform: translateX(0);
+  }
+
+  44%,
+  50% {
+    transform: translateX(-30px);
+  }
+
+  50.01%,
+  56% {
+    transform: translateX(30px);
+  }
+
+  94%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes moon-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes cloud-drift {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: translateX(-3px);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: translateX(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shadow,
+  .star,
+  .cloud {
+    animation: none;
+  }
+
+  /* hold a pretty waxing crescent instead of a new moon */
+  .shadow {
+    transform: translateX(-8px);
+  }
+}

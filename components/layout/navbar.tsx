@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import DarkModeToggle from './darkModeToggle'
+import LogoMoon from './logoMoon'
 import styles from './navbar.module.css'
 
 const links = [
@@ -40,8 +41,16 @@ export default function Navbar() {
         <span className={styles.twinkle} aria-hidden="true">✧</span>
 
         <Link href="/" className={`heading-font ${styles.logo}`}>
-          <span className={styles.logoMoon} aria-hidden="true">☾</span>
-          <span className={styles.logoText}>Cathleen</span>
+          <LogoMoon />
+          <span className={styles.logoWords}>
+            <span className={styles.logoName}>
+              <span className={styles.logoText}>Cathleen</span>
+              <span className={styles.logoSparkle} aria-hidden="true">✦</span>
+              <span className={styles.logoSparkle} aria-hidden="true">✧</span>
+              <span className={styles.logoSparkle} aria-hidden="true">✦</span>
+            </span>
+            <span className={styles.logoTagline}>˚ van Duuren ˚</span>
+          </span>
         </Link>
 
         <div className={styles.links}>
